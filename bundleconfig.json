@@ -1,0 +1,176 @@
+[
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/site.min.js",
+    "inputFiles": [
+      "wwwroot/js/site.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/dist/css/AdminLTE.min.css",
+    "inputFiles": [
+      "wwwroot/AdminLTE/dist/css/AdminLTE.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/colorlib/css/animate.min.css",
+    "inputFiles": [
+      "wwwroot/colorlib/css/animate.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/colorlib/css/responsive.min.css",
+    "inputFiles": [
+      "wwwroot/colorlib/css/responsive.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/colorlib/css/slick.min.css",
+    "inputFiles": [
+      "wwwroot/colorlib/css/slick.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/colorlib/css/themify-icons.min.css",
+    "inputFiles": [
+      "wwwroot/colorlib/css/themify-icons.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/colorlib/style.min.css",
+    "inputFiles": [
+      "wwwroot/colorlib/style.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/colorlib/popup/style.min.css",
+    "inputFiles": [
+      "wwwroot/colorlib/popup/style.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/colorlib/popup/reset.min.css",
+    "inputFiles": [
+      "wwwroot/colorlib/popup/reset.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/colorlib/popup/modernizr.min.js",
+    "inputFiles": [
+      "wwwroot/colorlib/popup/modernizr.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/colorlib/popup/main.min.js",
+    "inputFiles": [
+      "wwwroot/colorlib/popup/main.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/colorlib/js/active.min.js",
+    "inputFiles": [
+      "wwwroot/colorlib/js/active.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/colorlib/js/plugins.min.js",
+    "inputFiles": [
+      "wwwroot/colorlib/js/plugins.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/bowers/bootstrap-daterangepicker/daterangepicker.min.css",
+    "inputFiles": [
+      "wwwroot/AdminLTE/bowers/bootstrap-daterangepicker/daterangepicker.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/plugins/iCheck/all.min.css",
+    "inputFiles": [
+      "wwwroot/AdminLTE/plugins/iCheck/all.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/plugins/iCheck/flat/blue.min.css",
+    "inputFiles": [
+      "wwwroot/AdminLTE/plugins/iCheck/flat/blue.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/plugins/bootstrap-slider/slider.min.css",
+    "inputFiles": [
+      "wwwroot/AdminLTE/plugins/bootstrap-slider/slider.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/bowers/morris.js/morris.min.css",
+    "inputFiles": [
+      "wwwroot/AdminLTE/bowers/morris.js/morris.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/bowers/jvectormap/jquery-jvectormap.min.css",
+    "inputFiles": [
+      "wwwroot/AdminLTE/bowers/jvectormap/jquery-jvectormap.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/bowers/bootstrap-daterangepicker/daterangepicker.min.js",
+    "inputFiles": [
+      "wwwroot/AdminLTE/bowers/bootstrap-daterangepicker/daterangepicker.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/bowers/ckeditor/ckeditor.min.js",
+    "inputFiles": [
+      "wwwroot/AdminLTE/bowers/ckeditor/ckeditor.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/bowers/fastclick/lib/fastclick.min.js",
+    "inputFiles": [
+      "wwwroot/AdminLTE/bowers/fastclick/lib/fastclick.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/dist/js/demo.min.js",
+    "inputFiles": [
+      "wwwroot/AdminLTE/dist/js/demo.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/plugins/bootstrap-slider/bootstrap-slider.min.js",
+    "inputFiles": [
+      "wwwroot/AdminLTE/plugins/bootstrap-slider/bootstrap-slider.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/bowers/moment/moment.min.js",
+    "inputFiles": [
+      "wwwroot/AdminLTE/bowers/moment/moment.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/colorlib/css/bootstrap.min.css",
+    "inputFiles": [
+      "wwwroot/colorlib/css/bootstrap.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/dist/css/skins/_all-skins.min.css",
+    "inputFiles": [
+      "wwwroot/AdminLTE/dist/css/skins/_all-skins.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/AdminLTE/bowers/bootstrap/css/bootstrap.min.css",
+    "inputFiles": [
+      "wwwroot/AdminLTE/bowers/bootstrap/css/bootstrap.css"
+    ]
+  }
+]

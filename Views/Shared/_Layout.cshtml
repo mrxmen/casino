@@ -1,0 +1,421 @@
+﻿@inject SignInManager<AppUser> signInManager
+@inject UserManager<AppUser> userManager
+@inject ISettingsRepository repoSettings
+@model BigViewModel
+@using PaulMiami.AspNetCore.Mvc.Recaptcha
+
+@{
+    string strDisplay = repoSettings.Settings.First(s => s.SettingCode.Equals("DISPLAY_NOTIFY")).SettingContent.Trim();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <!-- Title -->
+    <title>.:: Tài Xỉu BnS ::.</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="/colorlib/img/core-img/favicon.ico">
+
+    <link rel="stylesheet" href="/colorlib/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/colorlib/css/full-slider.css" />
+    <!-- Core Stylesheet -->
+    <link href="/colorlib/style.min.css" rel="stylesheet" asp-append-version="true">
+    <!-- Popup Stylesheet -->
+    <link href="/colorlib/popup/style.min.css" rel="stylesheet" asp-append-version="true">
+    <!-- Responsive CSS -->
+    <link href="/colorlib/css/responsive.min.css" rel="stylesheet" asp-append-version="true">
+    <style>
+        .input-validation-error {
+            border-color: red !important;
+            background-color: #fee !important;
+        }
+
+        #Password-error {
+            color: red !important;
+        }
+
+        .text-danger {
+            color: red !important;
+        }
+
+        .btn-google-plus:hover {
+            color: #ce1e1e !important;
+        }
+
+        .btn-facebook:hover {
+            color: #3b5998 !important;
+        }
+
+        .btn-twitter:hover {
+            color: #00aced !important;
+        }
+
+        .form-control {
+            /*box-shadow:none !important;*/
+        }
+
+        .social-custom {
+            margin: 8px 0 !important;
+        }
+
+        #notificationDiv {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 720px;
+            height: 440px;
+            margin-top: -220px; /*set to a negative number 1/2 of your height*/
+            margin-left: -360px; /*set to a negative number 1/2 of your width*/
+            border: 1px solid #4c11be;
+            background: rgba(0, 172, 237, 0.42);
+        }
+
+
+        body {
+            background: url('/User/img/back_login_opa60.jpg') #4c11be no-repeat center top fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body>
+    @*@await Component.InvokeAsync("CartSummary")*@
+
+
+    <!-- ***** Popup Sign-In, Register, Forgot Password ***** -->
+    <div class="cd-user-modal">
+        <!-- this is the entire modal form, including the background -->
+        <div class="cd-user-modal-container">
+            <!-- this is the container wrapper -->
+            <ul class="cd-switcher">
+                <li><a href="#0">Đăng nhập</a></li>
+                <li><a href="#0">Đăng ký</a></li>
+            </ul>
+            <div id="cd-login">
+                <!-- log in form -->
+                <!-- Login Logo /-->
+                <div class="login-box-body" style="overflow:hidden;">
+                    @if (TempData["message"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible" style="width:99%; margin:0 auto;">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-cl"></i> Lỗi đăng nhập!</h4>
+                            @TempData["message"]
+                        </div>
+                    }
+                    <form asp-action="Login" asp-controller="Account" method="post" style="margin:24px auto; width:90%;">
+                        <input type="hidden" asp-for="LoginModel.ReturnUrl" />
+                        <input type="hidden" asp-for="LoginModel.RememberMe" />
+                        <fieldset>
+                            <div class="form-group">
+                                <div><span asp-validation-for="LoginModel.Name" class="text-danger"></span></div>
+                                <input asp-for="LoginModel.Name" required class="form-control" placeholder="Tài khoản" autofocus>
+                            </div>
+                            <div class="form-group">
+                                <div><span asp-validation-for="LoginModel.Password"></span></div>
+                                <input asp-for="LoginModel.Password" required class="form-control" placeholder="Mật khẩu" type="password" value="">
+                            </div>
+                            <div class="form-group">
+                                <recaptcha />
+                            </div>
+                            <div class="form-group">
+                                <div class="text-center">
+                                    <button type="submit" style="cursor:pointer;" class="btn btn-primary btn-block">Đăng nhập</button>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                        </fieldset>
+                    </form>
+                    <div class="social-auth-links text-center">
+                        <p> Hoặc đăng nhập bằng </p>
+                        <a style="color:#ce1e1e !important;" class="btn btn-google social-custom" asp-controller="Account" asp-action="GoogleLogin" asp-route-returnUrl="@ViewBag.returnUrl">
+                            <i class="fa fa-google"></i> Gmail
+                        </a>
+                        <a style="color:#0b2968 !important;" class="btn btn-facebook social-custom" asp-controller="Account" asp-action="FacebookLogin" asp-route-returnUrl="@ViewBag.returnUrl">
+                            <i class="fa fa-facebook"></i> Facebook
+                        </a>
+                        <a class="btn btn-microsoft social-custom" asp-controller="Account" asp-action="MicrosoftLogin" asp-route-returnUrl="@ViewBag.returnUrl">
+                            <i class="fa fa-windows"></i> Microsoft
+                        </a>
+                    </div>
+                    <div style="line-height:32px; margin-bottom:32px; text-align:center;">
+                        <!-- /.social-auth-links -->
+                        <a asp-action="Register" asp-controller="Account" class="text-center">Đăng ký thành viên</a>
+                    </div>
+                </div>
+                <!-- /.login-box-body -->
+
+
+
+                <div style="display:none; background:#4c11be;">
+                    <p class="cd-form-bottom-message"><a href="#0">Quên mật khẩu?</a></p>
+                </div>
+                <!-- <a href="#0" class="cd-close-form">Close</a> -->
+            </div> <!-- cd-login -->
+            <div id="cd-signup">
+                <!-- sign up form -->
+                <form asp-action="Register" asp-controller="Account" method="post" style="margin:24px auto; width:90%;">
+                    <fieldset>
+                        <div class="form-group">
+                            <div><span asp-validation-for="RegisterModel.UserName" class="text-danger"></span></div>
+                            <input asp-for="RegisterModel.UserName" required class="form-control" placeholder="Tài khoản" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <div style="color:#f00; background:#fce97c; border-radius:3px; border:1px solid #dedede; font-weight:700; padding:5px; margin-bottom:5px;">
+                                Mật khẩu cần phải:<br />
+                                - Ít nhất có 6 ký tự<br />
+                                - Không được chứa chuỗi: 12345<br />
+                                - Không được chứa Tên tài khoản
+                            </div>
+                            <div><span asp-validation-for="RegisterModel.Password"></span></div>
+                            <input asp-for="RegisterModel.Password" required class="form-control" placeholder="Mật khẩu" type="password">
+                        </div>
+                        <div class="form-group">
+                            <div><span asp-validation-for="RegisterModel.NameInGame"></span></div>
+                            <input asp-for="RegisterModel.NameInGame" required class="form-control" placeholder="Tên trong game">
+                        </div>
+                        <div class="form-group">
+                            <div><span asp-validation-for="RegisterModel.GameServerID"></span></div>
+                            <select id="select_server" asp-for="RegisterModel.GameServerID" class="form-control">
+                                <option selected value="0">Lựa chọn server game</option>
+                                <option value="1">Đại Mạc</option>
+                                <option value="2">Thiên Đỉnh</option>
+                                <option value="3">Núi Sương Bạc</option>
+                                <option value="4">Biển Lục Nam</option>
+                                <option value="5">Đồng Thủy Nguyệt</option>
+                                <option value="6">Trường Hồng Môn</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <recaptcha />
+                        </div>
+                        <div class="form-group">
+                            <div class="text-center">
+                                <button type="submit" style="cursor:pointer;" class="btn btn-primary btn-block">Đăng ký</button>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                    </fieldset>
+                </form>
+                <!-- <a href="#0" class="cd-close-form">Close</a> -->
+            </div> <!-- cd-signup -->
+            <div id="cd-reset-password">
+                <!-- reset password form -->
+                <p class="cd-form-message">Bạn quên mật khẩu? Hãy gửi yêu cầu đến Quản trị viên để nhận được hướng dẫn.</p>
+                <form class="cd-form">
+                    <p class="fieldset">
+                        <label class="image-replace cd-email" for="reset-email">E-mail</label>
+                        <input class="full-width has-padding has-border" id="reset-email" type="email" placeholder="E-mail">
+                        <span class="cd-error-message">Error message here!</span>
+                    </p>
+                    <p class="fieldset">
+                        <input class="full-width has-padding" type="submit" value="Reset password">
+                    </p>
+                </form>
+                <p class="cd-form-bottom-message"><a href="#0">Đăng nhập</a></p>
+            </div> <!-- cd-reset-password -->
+            <a href="#0" class="cd-close-form">Đóng</a>
+        </div> <!-- cd-user-modal-container -->
+    </div> <!-- cd-user-modal -->
+    <!-- ***** Popup Sign-In, Register, Forgot Password ***** -->
+    <!-- ***** Header Area Start ***** -->
+    <header class="header_area" style="background: url('/User/img/menu-noel.png') no-repeat; box-shadow: 0 14px 6px -2px rgba(0, 0, 0, 0.2);">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <!-- Menu Area Start -->
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    @:<div class="col-12 col-lg-9">
+                    }
+                    else
+                    {
+                        @:<div class="col-12">
+                        }
+                <div class="menu_area">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <!-- Logo -->
+                        <a class="navbar-brand" href="/">Tài Xỉu BnS</a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ca-navbar" aria-controls="ca-navbar" aria-expanded="false" aria-label="Toggle navigation"><span style="color:#fff !important;" class="navbar-toggler-icon"></span></button>
+                        <!-- Menu Area -->
+                        <div class="collapse navbar-collapse" id="ca-navbar">
+                            <ul class="navbar-nav ml-auto" id="nav">
+                                <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
+                                @*<li class="nav-item"><a class="nav-link" asp-action="News" asp-controller="Home">Tin tức</a></li>*@
+                                <li class="nav-item"><a class="nav-link" asp-action="Index" asp-controller="AdminLTE">Chơi game</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-action="UserImportGold" asp-controller="AdminLTE">Nạp Gold</a></li>
+                                @*<li class="nav-item"><a class="nav-link" asp-action="About" asp-controller="Home">Liên hệ</a></li>*@
+                            </ul>
+                            @if (!User.Identity.IsAuthenticated)
+                            {
+                                <div class="sing-up-button d-lg-none">
+                                    <a asp-action="Login" asp-controller="Account">Đăng nhập</a>
+                                </div>
+                            }
+                            else
+                            {
+                                <ul class="nav navbar-top-links navbar-right">
+                                    <!-- /.dropdown -->
+                                    <li class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="text-decoration:none !important; padding:35px 15px; color:#4fa4ff !important;">
+                                            <i class="fa fa-user fa-fw"></i>@User.Identity.Name
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-user fadeInDown" style="line-height:2.2rem;padding:0.8rem;width:185px;">
+                                            <li>
+                                                <a asp-action="Index" asp-controller="AdminLTE" style="color:#804ee0 !important;"><i class="fa fa-gamepad fa-fw"></i> Vào chơi game</a>
+                                            </li>
+                                            <li>
+                                                <a asp-action="UserProfile" asp-controller="AdminLTE" style="color:#804ee0 !important;"><i class="fa fa-user fa-fw"></i> Thông tin cá nhân</a>
+                                            </li>
+                                            <li>
+                                                <a asp-action="UserInbox" asp-controller="AdminLTE" style="color:#804ee0 !important;"><i class="fa fa-envelope fa-fw"></i> Hộp thư</a>
+                                            </li>
+                                            <li class="divider"></li>
+                                            <li>
+                                                <a asp-action="Logout" asp-controller="Account" style="color:#d000ef !important;"><i class="fa fa-power-off fa-fw"></i> Đăng xuất</a>
+                                            </li>
+                                        </ul>
+                                        <!-- /.dropdown-user -->
+                                    </li>
+                                    <!-- /.dropdown -->
+                                </ul>
+                            }
+                        </div>
+
+                    </nav>
+                </div>
+            </div>
+
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <!-- Signup btn -->
+                <div class="col-12 col-lg-3 text-right main-nav">
+                    <div class="sing-up-button d-none d-lg-inline-block">
+                        <a class="cd-signup" href="#0">Đăng ký</a>
+                    </div>
+
+                    <div class="sing-up-button d-none d-lg-inline-block">
+                        <a class="cd-signin" href="#0">Đăng nhập</a>
+                    </div>
+                </div>
+
+
+            }
+
+        </div>
+    </div>
+</header>
+<!-- ***** Header Area End ***** -->
+
+
+
+
+
+@RenderBody()
+
+
+
+
+
+<!-- ***** Footer Area Start ***** -->
+@*<footer class="footer-social-icon text-center section_padding_70 clearfix">
+    <!-- footer logo -->
+    <div class="footer-text">
+        <h2>Tài Xỉu BnS</h2>
+    </div>
+    <!-- social icon-->
+    <div class="footer-social-icon">
+        <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+        <a href="#"><i class="active fa fa-twitter" aria-hidden="true"></i></a>
+        <a href="#"> <i class="fa fa-instagram" aria-hidden="true"></i></a>
+        <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+    </div>
+    <div class="footer-menu">
+        <nav>
+            <ul>
+                <li><a style="color:#ffd800;" href="#">Về CasinoDaiMac</a></li>
+                <li><a style="color:#ffd800;" href="#">Nội quy &amp; Quy định</a></li>
+                <li><a style="color:#ffd800;" href="#">Liên hệ</a></li>
+            </ul>
+        </nav>
+    </div>
+    <!-- Foooter Text-->
+    <div class="copyright-text">
+        <!-- ***** Removing this text is now allowed! This template is licensed under CC BY 3.0 ***** -->
+        <p style="color:#4f2303 !important; font-weight:700; font-size:16px;">Copyright ©2017-2018 TaiXiuBnS. Designed by <a style="color:#0622ff !important;" href="https://taixiubns.com" target="_blank">TaiXiuBnS.com</a></p>
+    </div>
+</footer>*@
+
+<!-- ***** Footer Area Start ***** -->
+
+
+@*@if (strDisplay.Equals("YES"))
+{
+
+    <div id="notificationDiv">
+        <div style="float:right; width:50px;">
+            <button id="close_notification" class="btn btn-sm btn-danger" style="cursor:pointer;">Đóng</button>
+        </div>
+        <div id="notification_youtube" class="box box-danger" style="background:transparent !important; margin:10px auto;">
+            <iframe style="margin-left:30px;" width="660" height="372" src="https://www.youtube.com/embed/uQUyaK5Y740?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+
+}*@
+
+<!-- Jquery-2.2.4 JS -->
+<script src="/colorlib/js/jquery-2.2.4.min.js" asp-append-version="true"></script>
+<!-- Popper js -->
+<script src="/colorlib/js/popper.min.js"></script>
+<script src="/colorlib/popup/main.min.js" asp-append-version="true"></script>
+<!-- Popup script -->
+<script src="/colorlib/popup/modernizr.min.js" asp-append-version="true"></script>
+<!-- Bootstrap-4 Beta JS -->
+<script src="/colorlib/js/bootstrap.min.js"></script>
+<script src="/colorlib/js/bootstrap.bundle.min.js"></script>
+<!-- All Plugins JS -->
+<script src="/colorlib/js/plugins.js" asp-append-version="true"></script>
+<!-- Slick Slider Js-->
+<script src="/colorlib/js/slick.min.js" asp-append-version="true"></script>
+<!-- Footer Reveal JS -->
+<script src="/colorlib/js/footer-reveal.min.js"></script>
+<!-- Active JS -->
+<script src="/colorlib/js/active.min.js" asp-append-version="true"></script>
+<!-- Validate Client Side -->
+<script src="/js/jquery.validate.min.js"></script>
+<script src="/js/jquery.validate.unobtrusive.min.js"></script>
+<recaptcha-script />
+
+<script>
+    $(function () {
+        $('#close_notification').on('click', function (e) {
+            $('div#notificationDiv').hide("slow");
+            $('div#notification_youtube').html("");
+        });
+    });
+</script>
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113633453-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-113633453-1');
+</script>
+
+</body>
+
+</html>

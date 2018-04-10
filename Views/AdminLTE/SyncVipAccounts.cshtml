@@ -1,0 +1,120 @@
+﻿@model SyncVipViewModel
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Đồng Bộ Cấp Độ VIP
+        <small>cho phép đồng bộ cấp độ thành viên tại bất cứ thời điểm nào</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active">Đồng bộ cấp độ VIP</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-lg-4 col-xs-12">
+            <div class="box box-danger bg-white">
+                @if (TempData["message"] != null)
+                {
+                    if (TempData["type"].ToString().Equals("OK"))
+                    {
+                        <div class="alert alert-success alert-dismissible" style="width:99%; margin:0 auto;">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-check"></i> Thao tác thành công!</h4>
+                            @TempData["message"]
+                        </div>
+                    }
+                    else if (TempData["type"].ToString().Equals("NG"))
+                    {
+                        <div class="alert alert-danger alert-dismissible" style="width:99%; margin:0 auto;">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-warning"></i> Thao tác không thành công!</h4>
+                            @TempData["message"]
+                        </div>
+                    }
+                }
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <form asp-action="SyncVipAccounts" asp-controller="AdminLTE" id="frmSyncVip" asp-route-id="123" method="post">
+                        <div class="form-group">
+                            <button type="button" id="btnResetVip24h"
+                                    class="btn btn-lg btn-danger"
+                                    data-toggle="modal" data-target="#modal-sync-XXXXXX">
+                                <i class="glyphicon glyphicon-refresh"></i> Đồng Bộ Cấp Độ VIP
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- /.modal -->
+                    <div class="modal modal-info fade" id="modal-sync-XXXXXX">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 class="modal-title-importgold">Đồng Bộ Cấp Độ VIP</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="modal_confirm_title" style="display:block; margin-bottom:5px;">Bạn chắc chắn Đồng bộ?</div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="btn_Cancel_Sync" type="button" class="btn btn-outline pull-left" data-dismiss="modal">Bỏ qua</button>
+                                    <button id="btn_frmSyncVip" type="button" class="btn btn-outline" onclick="myFunction(this);">Đồng bộ</button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Danh sách VIP</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="tblListOfVipMembers" class="table table-bordered table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th>Cấp độ</th>
+                                <th>Số lượng</th>
+                                <th>Danh sách thành viên</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (RoleUsersCollection col in Model.Collections)
+                            {
+                            <tr>
+                                <td><img src="@col.RoleAvatar" width="64" /></td>
+                                <td>@col.RoleMemberCount</td>
+                                <td>@col.RoleMemeberList</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+</section>
+<!-- /.content -->

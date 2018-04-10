@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Chat Application";
+}
+
+
+<section class="special-area section_padding_150" style="margin-bottom:50px !important; box-shadow:none !important;">
+    <div class="container" style="max-width:1366px !important;">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <ul id="messages"></ul>
+                <input class="form-control" id="message-content" />
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+
+@section Scripts_ChatClient{
+    <script data-main="scripts/main" src="https://rawgit.com/radu-matei/websocket-manager/master/src/WebSocketManager.Client.TS/dist/WebSocketManager.js"></script>
+}

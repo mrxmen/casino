@@ -1,0 +1,98 @@
+﻿@model AppUser
+
+
+<div class="bg-primary m-1 p-1 text-white" style="margin-top:108px !important;"><h4>@Model.UserName</h4></div>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="UserProps" enctype="multipart/form-data" method="post">
+    <div class="form-group">
+        <label asp-for="FullName"></label>
+        <input type="text" asp-for="FullName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="JobTitle"></label>
+        <input type="text" asp-for="JobTitle" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="JoinedDate"></label>
+        <input type="date" asp-for="JoinedDate" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="City"></label>
+        <select asp-for="City" class="form-control">
+            <option disabled selected value="">Select a City</option>
+            <option value="Hanoi">Hanoi</option>
+            <option value="TP.HCM">TP.HCM</option>
+            <option value="DaNang">DaNang</option>
+            <option value="NhaTrang">NhaTrang</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Qualifications"></label>
+        <select asp-for="Qualifications" class="form-control">
+            <option disabled selected value="">Select a Qualification</option>
+            <option value="None">None</option>
+            <option value="Basic">Basic</option>
+            <option value="Advanced">Advanced</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Avatar"></label>
+        <input type="file" name="file">
+        <input type="text" name="my_avartar" asp-for="Avatar" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DateOfBirth"></label>
+        <input type="date" asp-for="DateOfBirth" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Followers"></label>
+        <input type="number" asp-for="Followers" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Following"></label>
+        <input type="number" asp-for="Following" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Friends"></label>
+        <input type="number" asp-for="Friends" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Education"></label>
+        <input type="text" asp-for="Education" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Location"></label>
+        <input type="text" asp-for="Location" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Skills"></label>
+        <input type="text" asp-for="Skills" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Experience"></label>
+        <input type="text" asp-for="Experience" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Notes"></label>
+        <input type="text" asp-for="Notes" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Cancel</a>
+</form>

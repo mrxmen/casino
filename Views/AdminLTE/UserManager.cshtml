@@ -1,0 +1,132 @@
+﻿@model IEnumerable<AppUser>
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Danh sách người dùng
+        <small>cho phép quản trị tài khoản người dùng</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li><a href="#">Quản Lý Người Dùng</a></li>
+        <li class="active">Danh sách người dùng</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                @*<div class="box-header">
+            <h3 class="box-title">Manage user accounts with full functionality</h3>
+        </div>*@
+                @if (TempData["message"] != null)
+                {
+                    if (TempData["type"].ToString().Equals("OK"))
+                    {
+                        <div class="alert alert-success alert-dismissible" style="width:99%; margin:0 auto;">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-check"></i> Thao tác thành công!</h4>
+                            @TempData["message"]
+                        </div>
+                    }
+                    else if (TempData["type"].ToString().Equals("NG"))
+                    {
+                        <div class="alert alert-danger alert-dismissible" style="width:99%; margin:0 auto;">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-warning"></i> Thao tác không thành công!</h4>
+                            @TempData["message"]
+                        </div>
+                    }
+                }
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="tblListOfUsers" class="table table-bordered table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;">#</th>
+                                <th>Tài khoản</th>
+                                <th>Tên InGame</th>
+                                <th>Gold</th>
+                                <th>Gold Thua</th>
+                                <th>Server</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Count() == 0)
+                            {
+                                <tr><td colspan="5">Không có tài khoản nào</td></tr>
+                            }
+                            else
+                            {
+                                int i = 1;
+                                foreach (AppUser user in Model)
+                                {
+                                    <tr>
+                                        <td>@i.ToString()</td>
+                                        <td>@user.UserName</td>
+                                        <td>@user.InGame</td>
+                                        <td style="text-align:right;">@user.MyGolds.ToString("n0")</td>
+                                        <td style="text-align:right;">@user.GoldLost.ToString("n0")</td>
+                                        <td>@user.GameServerName</td>
+                                        <td style="line-height:35px; text-align:center;">
+                                            <form asp-action="DeleteUser" asp-controller="AdminLTE" id="@user.Id" asp-route-id="@user.Id" method="post">
+                                                <a asp-action="EditUser" asp-route-id="@user.Id"
+                                                   class="btn btn-sm btn-info"><i class="glyphicon glyphicon-pencil"></i>Cập nhật</a>
+                                                <button type="button" id="btnDelUserModelForAdmin" asp-route-id="@user.Id"
+                                                        class="btn btn-sm btn-danger"
+                                                        data-toggle="modal" data-target="#modal-warning-@user.Id">
+                                                    <i class="glyphicon glyphicon-trash"></i> Xóa
+                                                </button>
+                                            </form>
+
+
+                                            <!-- /.modal -->
+                                            <div class="modal modal-danger fade" id="modal-warning-@user.Id">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            <h4 class="modal-title">Xóa tài khoản</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Bạn chắc chắn xóa tài khoản: @user.UserName này?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Bỏ qua</button>
+                                                            <button id="btn_@user.Id" type="button" class="btn btn-outline" onclick="myFunction(this);">Xóa</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <a class="btn btn-success" asp-action="CreateUser" asp-controller="AdminLTE">Tạo tài khoản</a>
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->

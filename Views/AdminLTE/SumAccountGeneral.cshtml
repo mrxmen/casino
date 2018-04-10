@@ -1,0 +1,140 @@
+﻿@model GeneralViewModel
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Ký gửi
+        <small>cho phép xem thông tin ký gửi hiện tại</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li><a href="#">Quản Lý Tài Khoản</a></li>
+        <li class="active">Ký gửi</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box bg-blue-active">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div style="margin-top:5px; margin-bottom: 5px; padding:5px; font-size:24px;">
+                        Ký Gửi đến @DateTime.Now.ToString("dd/MM/yyyy"): <span style="color:#ffe555;">@Model.Total_Have.ToString("n0") Gold</span>
+                        <div style="display:block; font-style:italic; color:#cecece; font-size:13px;">(Tổng số Gold đang có trong các tài khoản người chơi)</div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">LỊCH SỬ NẠP GOLD</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="tblListOfNapGold" class="table table-bordered table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;">#</th>
+                                <th>Ngày</th>
+                                <th>Loại</th>
+                                <th>Gold</th>
+                                <th>Tài Khoản</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Imports.Count() == 0)
+                {
+                    <tr><td colspan="5">Không có nạp Gold</td></tr>
+    }
+    else
+    {
+        int i = 1;
+        foreach (TblAccountGeneral accGen in Model.Imports)
+        {
+            <tr>
+                <td>@i.ToString()</td>
+                <td>@accGen.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@accGen.GeneralType</td>
+                <td>@accGen.GeneralGold</td>
+                <td>@accGen.UserInGame</td>
+            </tr>
+i++;
+}
+}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">LỊCH SỬ RÚT GOLD</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="tblListOfRutGold" class="table table-bordered table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;">#</th>
+                                <th>Ngày</th>
+                                <th>Loại</th>
+                                <th>Gold</th>
+                                <th>Tài Khoản</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Exports.Count() == 0)
+                {
+                    <tr><td colspan="5">Không có rút Gold</td></tr>
+    }
+    else
+    {
+        int i = 1;
+        foreach (TblAccountGeneral accGen in Model.Exports)
+        {
+            <tr>
+                <td>@i.ToString()</td>
+                <td>@accGen.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@accGen.GeneralType</td>
+                <td>@accGen.GeneralGold</td>
+                <td>@accGen.UserInGame</td>
+            </tr>
+i++;
+}
+}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+</section>
+<!-- /.content -->

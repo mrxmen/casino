@@ -1,0 +1,160 @@
+﻿@model RollingViewModel
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Chi tiết rolling
+        <small>danh sách người chơi đặt kèo</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li><a href="#">Quản Lý Vòng Quay</a></li>
+        <li class="active">Chi tiết rolling</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-md-7 col-xs-12">
+            <div class="box box-info" style="background:#fff url('/User/img/gg.png') repeat; height:306px;">
+                <div style="line-height:35px;">
+
+                    <div style="padding:20px;">
+                        <div style="background:#1f1f1f; padding:5px; width:300px; display:inline-block; text-align:center; border-radius:5px;">
+                            <h1 class="rainbowV2" style="font-size:24px; margin-bottom:5px; margin-top:5px;">https://taixiubns.com</h1>
+                        </div>
+
+                        <div style="background:#1f1f1f; padding:5px; width:300px; display:inline-block; text-align:center; border-radius:5px; margin-left:14px;">
+                            <h1 class="rainbowV2" style="font-size:24px; margin-bottom:5px; margin-top:5px;">Hotline: 0985640039</h1>
+                        </div>
+                    </div>
+
+                    <div style="padding:20px;">
+                        <div style="color:#000; font-weight:400; font-size:32px; display:inline-block; height:82px; background:#fff; border:1px solid #cecece; border-radius:10px;">
+                            <div style="width:120px; text-align:right; display:inline-block;">
+                                <span id="sp_rolling_total_tai">@Model.TotalTai</span>
+                            </div>
+                            <div style="width:100px; background:#b90f0f; color:#fff; line-height:80px; text-align:center; display:inline-block; border-top-right-radius:10px; border-bottom-right-radius:10px;">Tài</div>
+                        </div>
+                        <div style="color:#fff; font-weight:700; font-size:28px; display:inline-block; width:160px; text-align:center; padding:4px 10px; background:#000; margin-left:-3px;">
+                            <span id="sp_rmtime">Hết giờ</span>
+                            <input type="hidden" id="h_zero" value="zero" />
+                        </div>
+                        <div style="color:#000; font-weight:400; font-size:32px; display:inline-block; height:82px; background:#fff; border:1px solid #cecece; margin-left:-4px; border-radius:10px;">
+                            <div style="width:100px; background:#0094ff; color:#fff; line-height:80px; text-align:center; display:inline-block; border-top-left-radius:10px; border-bottom-left-radius:10px;">Xỉu</div>
+                            <div style="width:120px; display:inline-block;">
+                                <span id="sp_rolling_total_xiu">@Model.TotalXiu</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="height:50px;"></div>
+
+                    <div id="system_notify_for_rd" style="background:#eee; border:1px solid #bebebe;">
+                        <h1 class="rainbowV2" style="font-size:22px; line-height:40px; margin-top:0; margin-bottom:0;">@Model.RD_Note</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-xs-12" style="margin-left:-32px;">
+            <div class="box box-info" style="height:515px; overflow:hidden;">
+                <div class="box-header with-border" style="text-align:center; background:#555;">
+                    <h3 class="box-title" style="font-size:22px; color:#fff;">Roll <span id="sp_rdetail_croll_id">@Model.CurrentRollID</span></h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="tblListOfRollDetail" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width:30px; text-align:center;">Roll</th>
+                                <th style="width:66px; text-align:center;">Thời gian</th>
+                                <th style="width:44px; text-align:center;">Gold</th>
+                                <th style="width:50px; text-align:center;">Cửa</th>
+                                <th>Người đặt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="5"></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+
+
+@section Scripts_AdminLTE_RollingDetail {
+    <script>
+        (function GetClockDetail() {
+            $.ajax({
+                type: "GET",
+                url: "/AdminLTE/GetClock",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    //alert(JSON.stringify(data));
+                    if (data.isrunning == true) {
+                        if (data.totalseconds > 5) {
+                            var strm = (data.minutes >= 10) ? data.minutes : "0" + data.minutes;
+                            var strs = (data.seconds >= 10) ? data.seconds : "0" + data.seconds;
+                            $("#sp_rmtime").text(strm + ":" + strs);
+                        }
+                        else if (data.totalseconds <= 5) {
+                            // data.totalseconds <= 5
+                            $("#sp_rmtime").text("Hết giờ");
+                        }
+                    }
+                    else {
+                        $("#sp_rmtime").text("--:--");
+                    }
+
+                    setTimeout(GetClockDetail, 1000);
+                },
+                failure: function (data) {
+                    //setTimeout(displayListTrans, 1000);
+                },
+                error: function (data) {
+                    //setTimeout(displayListTrans, 1000);
+                }
+            });
+        }());
+
+        $(function () {
+            displayFirsTranDetail();
+        });
+
+        function displayFirsTranDetail() {
+            $.ajax({
+                type: "GET",
+                url: "/AdminLTE/GetFirstRollingDetail",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    // write current time
+                    $("#tblListOfRollDetail > tbody").html(data.datas);
+                },
+                failure: function (data) {
+                    //setTimeout(displayListTrans, 1000);
+                },
+                error: function (data) {
+                    //setTimeout(displayListTrans, 1000);
+                }
+            });
+        }
+    </script>
+}

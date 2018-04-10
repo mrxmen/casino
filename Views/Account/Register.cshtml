@@ -1,0 +1,204 @@
+﻿@model RegisterViewModel
+@*@using PaulMiami.AspNetCore.Mvc.Recaptcha*@
+
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <!-- Title -->
+    <title>Tài Xỉu Blade and Soul | Đăng nhập</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="/colorlib/img/core-img/favicon.ico">
+
+    <!-- Core Stylesheet -->
+    <link href="/colorlib/style.css" rel="stylesheet">
+
+    <!-- Responsive CSS -->
+    <link href="/colorlib/css/responsive.css" rel="stylesheet">
+    <style>
+        .input-validation-error {
+            border-color: red !important;
+            background-color: #fee !important;
+        }
+
+        #Password-error {
+            color: red !important;
+        }
+
+        .text-danger {
+            color: red !important;
+        }
+
+        .btn-google-plus:hover {
+            color: #ce1e1e !important;
+        }
+
+        .btn-facebook:hover {
+            color: #3b5998 !important;
+        }
+
+        .btn-twitter:hover {
+            color: #00aced !important;
+        }
+
+        .form-control {
+            /*box-shadow:none !important;*/
+        }
+
+        .social-custom {
+            margin: 8px 0 !important;
+        }
+
+        body {
+            background: url('/User/img/back_login_opa60.jpg') #4c11be no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+
+
+    <section class="special-area" style="margin-bottom:50px !important; margin-top:20px; box-shadow:none !important;">
+        <div class="container" style="max-width:1024px !important;">
+
+            <div class="row">
+                <!-- Single Special Area -->
+                <div class="col-12 col-md-3"></div>
+                <div class="col-12 col-md-6">
+                    <div class="single-special text-center wow fadeInUp" data-wow-delay="0.4s">
+                        <div style="background:rgba(255, 255, 255, 0.8) !important; box-shadow:rgba(0, 0, 0, 0.5) 0px 20px 30px -20px; padding:10px; border-radius:15px; border:2px double #fff; width:100%;">
+
+                            <div class="login-panel panel panel-default">
+                                <!-- Login Logo -->
+                                <div class="panel-heading" style="margin-bottom:12px;">
+                                    <span style="text-decoration:none !important; color:#278200 !important; font-size:24px !important;">
+                                        <img src="/User/img/casino_icon.png" style="width:60px;" /> <span style="color:#6d3805 !important; font-size:32px;">Tài Xỉu BnS</span>
+                                    </span>
+                                </div>
+                                <!-- Login Logo /-->
+                                <div class="login-box-body">
+                                    @if (TempData["message"] != null)
+                                    {
+                                        <div class="alert alert-danger alert-dismissible" style="width:99%; margin:0 auto 15px;">
+                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                            <h4><i class="icon fa fa-cl"></i> Lỗi đăng ký!</h4>
+                                            @TempData["message"]
+                                        </div>
+                                    }
+                                        <form asp-action="Register" asp-controller="Account" method="post">
+                                            <div asp-validation-summary="ModelOnly" id="divValidationSummary" class="text-danger wrapper" style="margin-bottom:10px;"></div>
+                                            <fieldset>
+                                                <div class="form-group">
+                                                    <div><span asp-validation-for="UserName" class="text-danger"></span></div>
+                                                    <input asp-for="UserName" required class="form-control" placeholder="Tài khoản" autofocus>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div style="color:#f00; font-weight:700; margin-bottom:5px;">
+                                                        Mật khẩu cần phải:<br />
+                                                        - Ít nhất có 6 ký tự<br />
+                                                        - Không được chứa chuỗi: 12345<br />
+                                                        - Không được chứa Tên tài khoản
+                                                    </div>
+                                                    <div><span asp-validation-for="Password"></span></div>
+                                                    <input asp-for="Password" required class="form-control" placeholder="Mật khẩu" type="password">
+                                                </div>
+                                                <div class="form-group">
+                                                    <div><span asp-validation-for="NameInGame"></span></div>
+                                                    <input asp-for="NameInGame" required class="form-control" placeholder="Tên trong game">
+                                                </div>
+                                                <div class="form-group">
+                                                    <div><span asp-validation-for="GameServerID"></span></div>
+                                                    <select id="select_server" asp-for="GameServerID" class="form-control">
+                                                        <option disabled selected value="0">Lựa chọn server game</option>
+                                                        <option value="1">Đại Mạc</option>
+                                                        <option value="2">Thiên Đỉnh</option>
+                                                        <option value="3">Núi Sương Bạc</option>
+                                                        <option value="4">Biển Lục Nam</option>
+                                                        <option value="5">Đồng Thủy Nguyệt</option>
+                                                        <option value="6">Trường Hồng Môn</option>
+                                                    </select>
+                                                </div>
+                                                @*<div class="form-group">
+                                                    <recaptcha />
+                                                </div>*@
+                                                <div class="form-group">
+                                                    <div class="text-center">
+                                                        <button type="submit" style="cursor:pointer;" class="btn btn-primary btn-block">Đăng ký</button>
+                                                    </div>
+                                                    <!-- /.col -->
+                                                </div>
+                                            </fieldset>
+                                        </form>
+                                    <div class="social-auth-links text-center">
+                                        <p> Hoặc đăng nhập bằng </p>
+                                        <a style="color:#ce1e1e !important;" class="btn btn-google social-custom" asp-controller="Account" asp-action="GoogleLogin" asp-route-returnUrl="@ViewBag.returnUrl">
+                                            <i class="fa fa-google"></i> Gmail
+                                        </a>
+                                        <a style="color:#0b2968 !important;" class="btn btn-facebook social-custom" asp-controller="Account" asp-action="FacebookLogin" asp-route-returnUrl="@ViewBag.returnUrl">
+                                            <i class="fa fa-facebook"></i> Facebook
+                                        </a>
+                                        <a class="btn btn-microsoft social-custom" asp-controller="Account" asp-action="MicrosoftLogin" asp-route-returnUrl="@ViewBag.returnUrl">
+                                            <i class="fa fa-windows"></i> Microsoft
+                                        </a>
+                                    </div>
+                                    <div style="line-height:30px;">
+                                        <!-- /.social-auth-links -->
+                                        <a asp-action="Login" asp-controller="Account" class="text-center">Đăng nhập</a>
+                                    </div>
+                                </div>
+                                <!-- /.login-box-body -->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-12">
+                    <div class="copyright text-center">
+                        <p style="color:#6d3805 !important; font-weight:400; font-size:20px !important;">
+                            Design by <a href="https://taixiubns.com" style="color:#fff !important; text-decoration:none !important;">TAIXIUBNS.COM</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Jquery-2.2.4 JS -->
+    <script src="/colorlib/js/jquery-2.2.4.min.js"></script>
+    <!-- Popper js -->
+    <script src="/colorlib/js/popper.min.js"></script>
+    <!-- Bootstrap-4 Beta JS -->
+    <script src="/colorlib/js/bootstrap.min.js"></script>
+    <!-- All Plugins JS -->
+    <script src="/colorlib/js/plugins.js"></script>
+    <!-- Slick Slider Js-->
+    <script src="/colorlib/js/slick.min.js"></script>
+    <!-- Footer Reveal JS -->
+    <script src="/colorlib/js/footer-reveal.min.js"></script>
+    <!-- Active JS -->
+    <script src="/colorlib/js/active.js"></script>
+    <!-- Validate Client Side -->
+    <script src="/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <recaptcha-script jquery-validation="false" />
+</body>
+</html>
+

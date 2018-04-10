@@ -1,0 +1,109 @@
+﻿@model ImExGuideViewModel
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Hướng dẫn Nạp/ Rút Gold
+        <small>cho phép viết hướng dẫn Nạp/Rút Gold</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active">Hướng dẫn Nạp/Rút Gold</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-lg-12 col-xs-12">
+            @if (TempData["message"] != null)
+            {
+                if (TempData["type"].ToString().Equals("OK"))
+                {
+                <div class="alert alert-success alert-dismissible" style="width:99%; margin:0 auto;">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-check"></i> Thao tác thành công!</h4>
+                    @TempData["message"]
+                </div>
+                }
+                else if (TempData["type"].ToString().Equals("NG"))
+                {
+                <div class="alert alert-danger alert-dismissible" style="width:99%; margin:0 auto;">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-warning"></i> Thao tác không thành công!</h4>
+                    @TempData["message"]
+                </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-xs-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">HƯỚNG DẪN NẠP GOLD</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <form asp-action="ImportGuide" asp-controller="AdminLTE" enctype="multipart/form-data" method="post">
+                        <div class="form-group">
+                            <label>Nội dung hướng dẫn</label>
+                            <textarea id="guideContent" name="guideContent" class="textarea" placeholder="Nhập nội dung"
+                                      style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
+                                @Model.ImportGuide.SettingContent
+                            </textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" id="btnSaveImportGuide"
+                                    class="btn btn-lg btn-success">
+                                <i class="glyphicon glyphicon-save"></i> Lưu Hướng Dẫn
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+
+        <div class="col-lg-6 col-xs-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">HƯỚNG DẪN RÚT GOLD</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <form asp-action="ExportGuide" asp-controller="AdminLTE" enctype="multipart/form-data" method="post">
+                        <div class="form-group">
+                            <label>Nội dung hướng dẫn</label>
+                            <textarea id="guideContent" name="guideContent" class="textarea" placeholder="Nhập nội dung"
+                                      style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
+                                @Model.ExportGuide.SettingContent
+                            </textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" id="btnSaveExportGuide"
+                                    class="btn btn-lg btn-danger">
+                                <i class="glyphicon glyphicon-save"></i> Lưu Hướng Dẫn
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+
+    </div>
+</section>
+<!-- /.content -->

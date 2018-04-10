@@ -1,0 +1,54 @@
+﻿@model CreateRollModel
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Tạo roll
+        <small>cho phép tạo roll mới</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li><a href="#">Quản Lý Roll</a></li>
+        <li class="active">Tạo roll</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+            <!-- Form Element sizes -->
+            <!-- Input addon -->
+            <div class="box box-info">
+                @*<div class="box-header with-border">
+                    <h3 class="box-title">Please fill out the form below</h3>
+                </div>*@
+                <div class="box-body">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <form asp-action="CreateRoll" asp-controller="AdminLTE" method="post">
+                        <div class="input-group" style="overflow:hidden; margin-bottom:12px;">
+                            <span style="color:#ff0000;">Thời gian quay được tính bằng giây (s). 1 phút = 60s</span>
+                        </div>
+                        <div class="input-group" style="overflow:hidden; margin-bottom:12px;">
+                            <span class="input-group-addon" style="color:#0094ff;">@@</span>
+                            <input asp-for="Duration_Time" type="number" class="form-control" placeholder="Thời gian quay" />
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-info pull-right">Tạo roll</button>
+                            <a asp-action="RollManager" asp-controller="AdminLTE" class="btn btn-default">Danh sách roll</a>
+                        </div>
+                        <!-- /input-group -->
+                    </form>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!--/.col (left) -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->

@@ -1,0 +1,138 @@
+﻿@model ImportGoldViewModel
+
+@{
+    Layout = "_AdminLayoutLTE";
+
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Nạp Gold
+        <small>cho phép người dùng gửi yêu cầu nạp Gold</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li><a href="#">Nạp Gold / Rút Gold</a></li>
+        <li class="active">Yêu cầu nạp Gold</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-lg-4 col-xs-12">
+            <div class="box box-success">
+                @if (TempData["message"] != null)
+            {
+                if (TempData["type"].ToString().Equals("OK"))
+                {
+                    <div class="alert alert-success alert-dismissible" style="width:99%; margin:0 auto;">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-check"></i> Thao tác thành công!</h4>
+                        @TempData["message"]
+                    </div>
+            }
+            else if (TempData["type"].ToString().Equals("NG"))
+            {
+                <div class="alert alert-danger alert-dismissible" style="width:99%; margin:0 auto;">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-warning"></i> Thao tác không thành công!</h4>
+                    @TempData["message"]
+                </div>
+        }
+    }
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="form-group">
+                        <label asp-for="UserImportGold_NumberOfGold">Số Gold muốn nạp</label>
+                        <input type="number" required min="10" asp-for="UserImportGold_NumberOfGold" class="form-control" placeholder="Nhập số Gold muốn nạp" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="UserImportGold_ReasonForImport">Ghi chú của bạn</label>
+                        <input type="text" required asp-for="UserImportGold_ReasonForImport" class="form-control" placeholder="Nhập ghi chú" />
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" id="btnSendImportGoldForUser"
+                                class="btn btn-lg btn-primary"
+                                onclick="return CheckImportGold('UserImportGold_NumberOfGold', 'UserImportGold_ReasonForImport');">
+                            <i class="glyphicon glyphicon-send"></i> Gửi yêu cầu
+                        </button>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+
+        <div class="col-lg-8 col-xs-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">HƯỚNG DẪN NẠP GOLD</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div style="padding:20px;">
+                        @Html.Raw(Model.ImportGuide.SettingContent)
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+</section>
+<!-- /.content -->
+
+
+
+@section Scripts_AdminLTE_UserImportGold {
+<script>
+    function CheckImportGold(objInput, objReason) {
+        var txtInput = document.getElementById(objInput);
+        var txtReason = document.getElementById(objReason);
+        var valInput = parseInt(txtInput.value);
+        var valReason = txtReason.value;
+        if (isNaN(valInput) || valInput == null || valInput == 0) {
+            alert('Nhập số lượng.');
+            return false;
+        }
+        else if (valReason == null || valReason == "") {
+            alert('Nhập ghi chú.');
+            return false;
+        }
+        else {
+            var ImportGoldData = { Numgold: valInput, Reasonim: valReason };
+            $.ajax({
+                type: "POST",
+                headers: {
+                    "RequestVerificationToken": tokenKey
+                },
+                url: "/AdminLTE/UserImportGoldJson",
+                data: ImportGoldData,
+                dataType: "json",
+                success: function (data) {
+                    if (data.returnType == "OK") {
+                        //update import requirement notification
+                        connection.invoke('updatereqim', data.cim);
+                    }
+                    txtInput.value = '';
+                    txtReason.value = '';
+                    alert(data.returnMessage);
+                },
+                failure: function (data) {
+                    //alert(JSON.stringify(data));
+                },
+                error: function (data) {
+                    //alert(JSON.stringify(data));
+                }
+            });
+        }
+    }
+
+</script>
+}

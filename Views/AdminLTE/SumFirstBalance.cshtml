@@ -1,0 +1,93 @@
+﻿@model FirstBalance
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Số dư đầu kỳ
+        <small>số dư đầu kỳ (trước lợi nhuận)</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li><a href="#">Quản Lý Tài Khoản</a></li>
+        <li class="active">Số Dư Đầu Kỳ</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-lg-4 col-xs-12">
+            <div class="box box-danger bg-white">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div style="font-size:14px; color:#ac0000;">
+                        SỐ DƯ ĐẦU KỲ: <span style="color:#ff6a00; font-size:18px;">@Model.Init_Balance.ToString("n0")</span>&nbsp;<img src="/User/img/gold.png" /><br />
+                        NGÀY: <span style="color:#020479; font-size:18px;">@Model.Init_Balance_Date</span>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+
+
+        @if (User.IsInRole("SuperAdmins") || User.IsInRole("Admins")) { 
+        <div class="col-lg-4 col-xs-12">
+            <div class="box box-warning bg-white">
+                @if (TempData["message"] != null)
+                {
+                if (TempData["type"].ToString().Equals("OK"))
+                {
+            <div class="alert alert-success alert-dismissible" style="width:99%; margin:0 auto;">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-check"></i> Thao tác thành công!</h4>
+                @TempData["message"]
+            </div>
+                }
+                else if (TempData["type"].ToString().Equals("NG"))
+                {
+            <div class="alert alert-danger alert-dismissible" style="width:99%; margin:0 auto;">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-warning"></i> Thao tác không thành công!</h4>
+                @TempData["message"]
+            </div>
+                }
+                }
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="color:#ff6a00; font-weight:700;">CẬP NHẬT SỐ DƯ ĐẦU KỲ</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div style="font-size:14px; color:#ac0000;">
+                        <form asp-action="UpdateFirstBalance" asp-controller="AdminLTE" enctype="multipart/form-data" method="post">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="color:#0b7000;"><i class="fa fa-money"></i></span>
+                                <input required type="number" name="sys_first_balance" id="sys_first_balance" value="@Model.Init_Balance" class="form-control" placeholder="Ví dụ: 05-12-2017" />
+                            </div>
+                            <br />
+                            <div class="input-group">
+                                <span class="input-group-addon" style="color:#0b7000;"><i class="fa fa-calendar"></i></span>
+                                <input required type="text" name="sys_first_date" id="sys_first_date" value="@Model.Init_Balance_Date" class="form-control" placeholder="Ví dụ: 05-12-2017" />
+                            </div>
+                            <br />
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn-danger pull-right">CẬP NHẬT SỐ DƯ</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+        }
+    </div>
+
+    
+</section>
+<!-- /.content -->

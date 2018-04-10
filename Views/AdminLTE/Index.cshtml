@@ -1,0 +1,933 @@
+﻿@model BigAdminViewModel
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+
+
+
+<!-- Content Header (Page header) -->
+@*<section class="content-header">
+    <h1>
+        Bảng điều khiển
+        <small>Quản lý game</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active">Bảng điều khiển</li>
+    </ol>
+</section>*@
+
+<!-- Notification -->
+@if (TempData["message"] != null)
+{
+    if (TempData["type"] != null)
+    {
+        if (TempData["type"].ToString().Equals("OK"))
+        {
+            <div class="alert alert-success alert-dismissible" style="width:98%; margin:0 auto;">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-check"></i> Thao tác thành công!</h4>
+                @TempData["message"]
+            </div>
+        }
+        else if (TempData["type"].ToString().Equals("NG"))
+        {
+            <div class="alert alert-danger alert-dismissible" style="width:98%; margin:0 auto;">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-check"></i> Thao tác không thành công!</h4>
+                @TempData["message"]
+            </div>
+        }
+        else if (TempData["type"].ToString().Equals("WN"))
+        {
+            <div class="alert alert-warning alert-dismissible" style="width:98%; margin:0 auto;">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-warning"></i> Thông báo!</h4>
+                @TempData["message"]
+            </div>
+        }
+    }
+}
+<!-- Notification -->
+<div id="langList" style="display:none;">
+</div>
+<!-- Main content -->
+<section class="content">
+    <!-- Small boxes (Stat box) -->
+    <div style="display:none;">
+        <audio id="timer-beep-tai"><source src="/User/audio/win/tai_win.mp3" /></audio>
+        <audio id="timer-beep-xiu"><source src="/User/audio/win/xiu_win.mp3" /></audio>
+        <audio id="timer-beep-quay"><source src="/User/audio/win/chuan_bi_quay.mp3" /></audio>
+        <audio id="timer-beep-ck"><source src="/User/audio/win/chot_keo.mp3" /></audio>
+        <input type="hidden" id="ck_ck" value="notdisplayed" />
+    </div>
+    <div class="row">
+        <div class="col-lg-5 col-xs-12">
+            <!-- small box -->
+            <div class="small-box bg-red cssDanhCuaTai">
+                <div class="inner text-right" style="position:absolute; z-index:10; right:0;">
+                    <span style="color: #ffd800;font-size: 20px;" id="sp_current_tai_rolling">@Model.CurrentTai_Rolling</span> <span style="display:inline-block;">:Tổng Đặt</span>
+                    <h3><span id="sp_total_tai_rolling">@Model.TotalTai_Rolling</span> | Tài <span style="font-size:24px;">(<i class="fa fa-user-o"></i>&nbsp;<span id="sp_total_user_tai_rolling">@Model.PeopleTai_Rolling</span>)</span></h3>
+                    <button type="button" id="btn_danh_Tai"
+                            class="btn btn-lg btn-danger" style="border:2px solid #710707 !important; position:absolute; right:172px; margin-top:-2px; padding:8px 16px !important;"
+                            onclick="return CheckPlayTaiGold('tempTAI', 'myCurrentGoldTai')">
+                        <i class="glyphicon glyphicon-check"></i> Đánh
+                    </button>
+                    <input id="tranTFinished" value="Y" type="hidden" />
+                    <input id="myCurrentGoldTai" name="myCurrentGoldTai" value="@Model.CurrentUser?.MyGolds" type="hidden" />
+                    <input id="myStatusTai" name="myStatusTai" value="@Model.CurrentUser?.Id" type="hidden" />
+                    <input id="userID" name="userID" value="@Model.CurrentUser?.Id" type="hidden" />
+                    <input id="taiTransactionGold" name="taiTransactionGold" type="hidden" />
+                    <input id="tempTAI" type="number" min="1" style="width:160px !important; color:#710707; font-size:15px; font-weight:700; position:absolute; right:10px; height:40px !important; display:inline-block !important;" class="form-control" placeholder="Số Gold Tài">
+                </div>
+                <div class="icon">
+                    <i class="ion">
+                        <img src="/User/img/phongthan_icon.png" width="100" />
+                    </i>
+                    <img src="~/User/linhvat/linhvat_khi1.png" width="60" style="margin-left:-30px; margin-top:-66px;" />
+                    <img src="~/User/linhvat/linhvat_gau1.png" width="60" style="margin-left:-30px; margin-top:-66px;" />
+                </div>
+            </div>
+        </div>
+        <!-- ./col -->
+
+        <div class="col-lg-2 col-xs-12">
+            <div id="d2_roll_status_bg" class="small-box cssClockIndex" style="">
+                <div id="d2_roll_status" style="line-height: 138px; font-size: 32px; color: #fff; text-align: center; font-weight:700;">@Model.RollStatus_RunOrNo</div>
+            </div>
+        </div>
+
+        <div class="col-lg-5 col-xs-12">
+            <!-- small box -->
+            <div class="small-box bg-aqua cssDanhCuaXiu">
+                <div class="inner" style="position:absolute; z-index:10; text-align:left;">
+                    <span style="display:inline-block;">Tổng Đặt:</span> <span style="color: #ffd800;font-size: 20px;" id="sp_current_xiu_rolling">@Model.CurrentXiu_Rolling</span>
+                    <h3><span style="font-size:24px;">(<i class="fa fa-user-o"></i>&nbsp;<span id="sp_total_user_xiu_rolling">@Model.PeopleXiu_Rolling</span>)</span> Xỉu | <span id="sp_total_xiu_rolling">@Model.TotalXiu_Rolling</span></h3>
+                    <input id="tempXIU" type="number" min="1" style="width:160px !important; color:#09469a; font-size:15px; font-weight:700; height:40px !important; display:inline-block !important;" class="form-control" placeholder="Số Gold Xỉu">
+                    <input id="myCurrentGoldXiu" name="myCurrentGoldXiu" value="@Model.CurrentUser?.MyGolds" type="hidden" />
+                    <input id="myStatusXiu" name="myStatusXiu" value="@Model.CurrentUser?.Id" type="hidden" />
+                    <input id="xiuTransactionGold" name="xiuTransactionGold" type="hidden" />
+                    <input id="userID" name="userID" value="@Model.CurrentUser?.Id" type="hidden" />
+                    <input id="tranXFinished" value="Y" type="hidden" />
+                    <button type="button" id="btn_danh_Xiu"
+                            class="btn btn-lg btn-info" style="border:2px solid #09469a !important; margin-top:-2px; padding:8px 16px !important;"
+                            onclick="return CheckPlayXiuGold('tempXIU', 'myCurrentGoldXiu')">
+                        <i class="glyphicon glyphicon-check"></i> Đánh
+                    </button>
+                </div>
+                <div class="icon" style="right:0px !important;">
+                    <i class="ion">
+                        <img src="~/User/linhvat/linhvat_nhen1.png" width="60" style="margin-right:-14px; margin-top:-66px;" />
+                        <img src="~/User/linhvat/linhvat_no1.png" width="60" style="margin-right:-30px; margin-top:-66px;" />
+                        <img src="/User/img/loithan_icon.png" width="100" />
+                    </i>
+                </div>
+            </div>
+        </div>
+        <!-- ./col -->
+    </div>
+    <!-- /.row -->
+
+
+
+
+    <div class="row">
+        <div class="col-lg-12 col-xs-12">
+            <div class="marquee">
+                @Html.Raw(Model.Notification.SettingContent)
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Main row -->
+    <div class="row">
+
+
+        <!-- Left col -->
+        <section class="col-lg-8 connectedSortable">
+            <!-- Live Stream -->
+            <div class="nav-tabs-custom">
+                <!-- Tabs within a box -->
+                <ul class="nav nav-tabs pull-right" style="display:none;">
+                    <li class="pull-left header"><i class="fa fa-inbox"></i> Live Stream</li>
+                </ul>
+                <div id="d_notification" style="min-height:54px;"></div>
+                <div class="tab-content no-padding" style="overflow:hidden; background:#808080;">
+                    <div id="this123" class="embed-responsive embed-responsive-16by9">
+                        <iframe src="@Model.WebStream?.SettingContent"
+                                gesture="media" allow="encrypted-media" allowfullscreen="" frameborder="0"></iframe>
+                    </div>
+                    <div class="over123" style="display:none;">
+                        <div id="div_th_content" style="width:360px; margin:20px auto;">
+                            <div style="display:block;width:150px;margin:0 auto;text-align:center;">
+                                <img src="/User/img/thanks3.gif" style="width:100%;" />
+                            </div>
+                            <div id="div_dou_dog" style="display:block;text-align:center;font-size:24px;color:#fff;">
+                                <span style="color:#00f604; font-size:32px; display:block;" id="div_dou"></span> <span>donate</span> <span style="color:#ff2e2e; font-size:40px; font-weight:700;" id="div_dog"></span> <span>G</span>
+                            </div>
+                            <div id="div_don" style="font-size:28px;display:block;color:#ffd800;text-align:center;margin-top:24px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.nav-tabs-custom -->
+            <!-- Notice -->
+            @if (User.Identity.IsAuthenticated) {
+            <div class="box box-solid bg-aqua-active">
+                <div class="box-header">
+                    <i class="fa fa-th"></i>
+                    <h3 class="box-title">Thông Tin Cần Chú Ý</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn bg-teal btn-sm" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body border-radius-none" style="padding:0 !important;">
+                    <div style="background:#fff; padding:15px; line-height:32px;">
+                        <div style="color:#000;">
+                            @Html.Raw(Model.WebNote?.SettingContent)
+                        </div>
+
+
+                        <span style="color:#ff0000; font-weight:700;font-size:16px;">Quyền Lợi VIP</span><br />
+                        <table class="table table-bordered table-striped" style="color:#000;">
+                            <tr>
+                                <th>#</th>
+                                <th>Cấp Bậc</th>
+                                <th>Số Lượng</th>
+                                <th>Phí Chơi Game Tài Xỉu</th>
+                            </tr>
+                            <tr>
+                                <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip5")).RoleImg" width="48" /></td>
+                                <td class="noticeIndex">VIP Ruby</td>
+                                <td class="noticeIndex">1 Người</td>
+                                <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip5")).PercentReturn %</td>
+                            </tr>
+                            <tr>
+                                <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip4")).RoleImg" width="48" /></td>
+                                <td class="noticeIndex">VIP Kim Cương</td>
+                                <td class="noticeIndex">2 Người</td>
+                                <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip4")).PercentReturn %</td>
+                            </tr>
+                            <tr>
+                                <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip3")).RoleImg" width="48" /></td>
+                                <td class="noticeIndex">VIP Vàng</td>
+                                <td class="noticeIndex">5 Người</td>
+                                <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip3")).PercentReturn %</td>
+                            </tr>
+                            <tr>
+                                <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip2")).RoleImg" width="48" /></td>
+                                <td class="noticeIndex">VIP Bạc</td>
+                                <td class="noticeIndex">10 Người</td>
+                                <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip2")).PercentReturn %</td>
+                            </tr>
+                            <tr>
+                                <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip1")).RoleImg" width="48" /></td>
+                                <td class="noticeIndex">VIP Phổ Thông</td>
+                                <td class="noticeIndex">20 Người</td>
+                                <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip1")).PercentReturn %</td>
+                            </tr>
+                            <tr>
+                                <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip0")).RoleImg" width="48" /></td>
+                                <td class="noticeIndex">Thành Viên</td>
+                                <td class="noticeIndex">Không Giới Hạn</td>
+                                <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip0")).PercentReturn %</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            }
+            <!-- /.box -->
+        </section>
+        <!-- /.Left col -->
+        <!-- right col (We are only adding the ID to make the widgets sortable)-->
+        <section class="col-lg-4 connectedSortable">
+            <!-- Chat box -->
+            <div class="box box-success">
+                <div class="box-header bg-green-active">
+                    <i class="fa fa-comments-o"></i>
+                    <h3 class="box-title">
+                        Chat Box (<i class="fa fa-user-o text-bold"></i>&nbsp;<span id="num_of_online_users">0</span>)
+                    </h3>
+                    <div class="box-tools pull-right" data-toggle="tooltip" title="Online">
+                        <div class="btn-group" data-toggle="btn-toggle">
+                            <button type="button" data-widget="collapse" class="btn btn-sm bg-green">
+                                <i class="fa fa-minus text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body chat" id="chat-box">
+                    <div class="msg">
+                        <div id="msgs"></div>
+                    </div>
+                </div>
+                <!-- /.chat -->
+                <div class="box-footer">
+                    @if (User.Identity.IsAuthenticated) {
+                    <div class="input-group" style="width:98%;">
+                        <a id="guide_chat_icon" href="javascript:void(0);" style="overflow:hidden; display:inline-block;width:10%;float:left;">
+                            <img src="/User/img/happy.png" alt="Biểu tượng chát" title="Biểu tượng chát" style="float:left; margin-right:2px; width:100%; max-width:36px;" />
+                        </a>
+                        <input id="MessageField" type="text" class="form-control" maxlength="69" style="color:#09469a; display:inline-block; float:left; margin-top:1px; width:89%;" placeholder="Gõ nội dung và bấm Enter ..." />
+                        <div class="input-group-btn">
+                            <input type="hidden" id="total_message_1" name="total_message_1" value="0" />
+                            <button type="button" id="btnSendMessage" class="btn btn-success"><i class="fa fa-send-o"></i></button>
+                        </div>
+                    </div>
+                    }
+                    <div class="input-group">
+                        <div id="show_emoticon_guide" style="display:none;">
+                            <!-- Custom Tabs -->
+                            <div class="nav-tabs-custom" style="margin-top:5px;">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#tab_1" data-toggle="tab">Bánh bao</a></li>
+                                    <li><a href="#tab_2" data-toggle="tab">Mèo cute</a></li>
+                                    <li><a href="#tab_3" data-toggle="tab">Panda mập</a></li>
+                                </ul>
+                                <div class="tab-content" style="overflow:auto; width:100%; height:200px;">
+                                    <div class="tab-pane active" id="tab_1">
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao01" src="/User/emo/banhbao/banhbao01.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao02" src="/User/emo/banhbao/banhbao02.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao03" src="/User/emo/banhbao/banhbao03.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao04" src="/User/emo/banhbao/banhbao04.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao05" src="/User/emo/banhbao/banhbao05.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao06" src="/User/emo/banhbao/banhbao06.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao07" src="/User/emo/banhbao/banhbao07.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao08" src="/User/emo/banhbao/banhbao08.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao09" src="/User/emo/banhbao/banhbao09.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao10" src="/User/emo/banhbao/banhbao10.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao11" src="/User/emo/banhbao/banhbao11.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao12" src="/User/emo/banhbao/banhbao12.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao13" src="/User/emo/banhbao/banhbao13.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao14" src="/User/emo/banhbao/banhbao14.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao15" src="/User/emo/banhbao/banhbao15.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao16" src="/User/emo/banhbao/banhbao16.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao17" src="/User/emo/banhbao/banhbao17.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao18" src="/User/emo/banhbao/banhbao18.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao19" src="/User/emo/banhbao/banhbao19.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao20" src="/User/emo/banhbao/banhbao20.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao21" src="/User/emo/banhbao/banhbao21.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao22" src="/User/emo/banhbao/banhbao22.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao23" src="/User/emo/banhbao/banhbao23.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao24" src="/User/emo/banhbao/banhbao24.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao25" src="/User/emo/banhbao/banhbao25.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao26" src="/User/emo/banhbao/banhbao26.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao27" src="/User/emo/banhbao/banhbao27.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao28" src="/User/emo/banhbao/banhbao28.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao29" src="/User/emo/banhbao/banhbao29.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao30" src="/User/emo/banhbao/banhbao30.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao31" src="/User/emo/banhbao/banhbao31.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao32" src="/User/emo/banhbao/banhbao32.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao33" src="/User/emo/banhbao/banhbao33.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao34" src="/User/emo/banhbao/banhbao34.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao35" src="/User/emo/banhbao/banhbao35.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao36" src="/User/emo/banhbao/banhbao36.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao37" src="/User/emo/banhbao/banhbao37.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao38" src="/User/emo/banhbao/banhbao38.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao39" src="/User/emo/banhbao/banhbao39.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao40" src="/User/emo/banhbao/banhbao40.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao41" src="/User/emo/banhbao/banhbao41.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao42" src="/User/emo/banhbao/banhbao42.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao43" src="/User/emo/banhbao/banhbao43.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao44" src="/User/emo/banhbao/banhbao44.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao45" src="/User/emo/banhbao/banhbao45.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao46" src="/User/emo/banhbao/banhbao46.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao47" src="/User/emo/banhbao/banhbao47.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao48" src="/User/emo/banhbao/banhbao48.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao49" src="/User/emo/banhbao/banhbao49.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao50" src="/User/emo/banhbao/banhbao50.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao51" src="/User/emo/banhbao/banhbao51.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao52" src="/User/emo/banhbao/banhbao52.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao53" src="/User/emo/banhbao/banhbao53.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao54" src="/User/emo/banhbao/banhbao54.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/banhbao55" src="/User/emo/banhbao/banhbao55.gif"></span></a></div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="tab_2">
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute01" src="/User/emo/meocute/meocute01.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute02" src="/User/emo/meocute/meocute02.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute03" src="/User/emo/meocute/meocute03.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute04" src="/User/emo/meocute/meocute04.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute05" src="/User/emo/meocute/meocute05.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute06" src="/User/emo/meocute/meocute06.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute07" src="/User/emo/meocute/meocute07.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute08" src="/User/emo/meocute/meocute08.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute09" src="/User/emo/meocute/meocute09.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute10" src="/User/emo/meocute/meocute10.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute11" src="/User/emo/meocute/meocute11.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute12" src="/User/emo/meocute/meocute12.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute13" src="/User/emo/meocute/meocute13.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute14" src="/User/emo/meocute/meocute14.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute15" src="/User/emo/meocute/meocute15.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute16" src="/User/emo/meocute/meocute16.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute17" src="/User/emo/meocute/meocute17.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute18" src="/User/emo/meocute/meocute18.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/meocute19" src="/User/emo/meocute/meocute19.gif"></span></a></div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="tab_3">
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda01" src="/User/emo/panda/panda01.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda02" src="/User/emo/panda/panda02.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda03" src="/User/emo/panda/panda03.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda04" src="/User/emo/panda/panda04.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda05" src="/User/emo/panda/panda05.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda06" src="/User/emo/panda/panda06.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda07" src="/User/emo/panda/panda07.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda08" src="/User/emo/panda/panda08.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda09" src="/User/emo/panda/panda09.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda10" src="/User/emo/panda/panda10.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda11" src="/User/emo/panda/panda11.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda12" src="/User/emo/panda/panda12.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda13" src="/User/emo/panda/panda13.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda14" src="/User/emo/panda/panda14.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda15" src="/User/emo/panda/panda15.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda16" src="/User/emo/panda/panda16.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda17" src="/User/emo/panda/panda17.gif"></span></a></div>
+                                        <div class="emoDiv"><a href="#" onclick="return showCode(this)"><span class="emoImg"><img alt="/panda18" src="/User/emo/panda/panda18.gif"></span></a></div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                </div>
+                                <!-- /.tab-content -->
+                            </div>
+                            <!-- nav-tabs-custom -->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- /.box -->
+            <!-- Donate box -->
+            <div class="box bg-light-blue">
+                <div class="box-header bg-blue-active">
+                    <i class="fa fa-share"></i>
+                    <h3 class="box-title">Donate</h3>
+                    <div class="box-tools pull-right" data-toggle="tooltip" title="Donate">
+                        <div class="btn-group" data-toggle="btn-toggle">
+                            <button type="button" data-widget="collapse" class="btn btn-sm bg-blue">
+                                <i class="fa fa-minus text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body" style="padding:0 !important;">
+                    <div style="background:#fff; color:#000; padding:15px; overflow:hidden;">
+                        @Html.AntiForgeryToken()
+
+                        <input id="userID" name="userID" value="@Model.CurrentUser?.Id" type="hidden" />
+                        <div class="form-group">
+                            <label name="goldForDonate">Số Gold Donate</label>
+                            <input id="inputGoldForDonate" name="inputGoldForDonate" type="number" min="1" class="form-control" placeholder="Nhập số Gold donate" />
+                        </div>
+
+                        <div class="form-group">
+                            <label name="reasonForDonate">Nội dung</label>
+                            <input id="reasonForDonate" name="reasonForDonate" maxlength="40" type="text" required class="form-control" placeholder="Nội dung (tối đa 40 ký tự)" />
+                        </div>
+
+                        <div class="form-group">
+                            @if (User.Identity.IsAuthenticated) {
+                            <button type="button" id="btnSendDonateForUser"
+                                    class="btn btn-lg btn-primary"
+                                    onclick="return CheckPlayDonate('inputGoldForDonate', 'reasonForDonate', 'myCurrentGoldDonate');">
+                                <i class="glyphicon glyphicon-send"></i> Donate
+                            </button>
+                            }
+
+                            <button type="button" id="btnStatistic_Tai"
+                                    class="btn btn-lg btn-danger pull-right" style="margin-left:10px;">
+                                Tài: @Model.RollStatistic.Total_Tai/@Model.RollStatistic.Total_Rolls
+                            </button>
+
+                            <button type="button" id="btnStatistic_Xiu"
+                                    class="btn btn-lg btn-info pull-right">
+                                Xỉu: @Model.RollStatistic.Total_Xiu/@Model.RollStatistic.Total_Rolls
+                            </button>
+
+                            <input id="myCurrentGoldDonate" name="myCurrentGoldDonate" value="@Model.CurrentUser?.MyGolds" type="hidden" />
+                        </div>
+
+                        <!-- /.modal -->
+                        <div class="modal modal-warning fade" id="modal-userdonate">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title-donate">Donate</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="modal_confirm_donate_title" style="display:block; margin-bottom:5px;"></div>
+                                        <div id="modal_confirm_donate_gold" style="display:block; margin-bottom:5px;"></div>
+                                        <div id="modal_confirm_donate_reason" style="display:block; margin-bottom:5px;"></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button id="modal_confirm_donate_btn_cancel" type="button" class="btn btn-outline pull-left" data-dismiss="modal">Bỏ qua</button>
+                                        <button id="btn_@Model.CurrentUser?.Id" type="button" class="btn btn-outline modal_confirm_donate_btn_submit" onclick="myFunction(this);">Donate</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- /.box -->
+            <!-- Roll box -->
+            <div class="box box-warning">
+                <div class="box-header bg-orange-active">
+                    <i class="fa fa-pie-chart text-white"></i>
+                    <h3 class="box-title">Kết Quả Roll</h3>
+                    <div class="box-tools pull-right" data-toggle="tooltip" title="Rolling">
+                        <div class="btn-group" data-toggle="btn-toggle">
+                            <button type="button" data-widget="collapse" class="btn btn-sm bg-orange">
+                                <i class="fa fa-minus text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="row" id="div_rolled_result"></div>
+                    <div style="margin:10px auto; width:162px;">
+                        <input type="hidden" id="current_take_rolled" value="8" />
+                        <a style="font-size:18px; color:#09469a; font-weight:700;" href="javascript:void(0);" id="btn_load_more_rolled">TẢI THÊM KẾT QUẢ</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box -->
+        </section>
+        <!-- right col -->
+
+
+
+
+
+
+    </div>
+    <!-- /.row (main row) -->
+</section>
+<!-- /.content -->
+<!-- For notification -->
+<div id="dialogTai"></div>
+<div id="dialogXiu"></div>
+<div id="dialogDN"></div>
+<div id="dialogDonate"></div>
+<div id="dialogDonateThanks"></div>
+
+<div id="dialog-confirm-tai" style="display:none;" title="ĐẶT TÀI">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>Bạn đã chọn cửa Tài. <br />Bạn chắc chắn đặt <span id="dct_gold"></span> Gold ?</p>
+</div>
+
+<div id="dialog-confirm-xiu" style="display:none;" title="ĐẶT XỈU">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>Bạn đã chọn cửa Xỉu. <br />Bạn chắc chắn đặt <span id="dcx_gold"></span> Gold ?</p>
+</div>
+
+<div id="dialog-confirm-donate" style="display:none;" title="DONATE">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>Xin cảm ơn! <br />Số Gold donate: <span id="dcd_gold"></span> Gold<br />Nội dung: <span id="dcd_content"></span><br /><br />Bạn chắc chắn?</p>
+</div>
+
+<div id="dialog-result-roll" style="display:none;" title="KẾT QUẢ ROLL">
+    <p><span class="ui-icon ui-icon-info" style="float:left; margin:12px 12px 20px 0;"></span><p id="roll_rs"></p></p>
+</div>
+
+<div id="dialog-chotkeo-roll" style="display:none;" title="CHỐT KÈO">
+    <p><span class="ui-icon ui-icon-info" style="float:left; margin:12px 12px 20px 0;"></span><p id="roll_ck"></p></p>
+</div>
+
+<div id="dialog-F5-document" style="display:none;" title="F5">
+    <p style="font-size:24px; color:#0000a5;">
+        <span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>WEB CẦN ĐƯỢC <span style="color:#ff0000;">F5</span>
+    </p>
+</div>
+
+
+@section Scripts_AdminLTE_Index {
+    <script>
+        $(function () {
+            //Load chatbox
+            setTimeout(function () {
+                GetInitMessage();
+                // Load rolls
+                setTimeout(function () {
+                    // Load ranks
+                    refreshRolled();
+                    //setTimeout(function () {
+                    //    GetRanks();
+                    //}, 3000);
+                }, 3000);
+            }, 3000);
+
+            $('.marquee').marquee({
+                //speed in milliseconds of the marquee
+                duration: 16000,
+                //gap in pixels between the tickers
+                gap: 50,
+                //time in milliseconds before the marquee will start animating
+                delayBeforeStart: 0,
+                //'left' or 'right'
+                direction: 'left',
+                //true or false - should the marquee be duplicated to show an effect of continues flow
+                duplicated: true,
+                //stop when mouse over
+                pauseOnHover: true
+            });
+
+            $('a#guide_chat_icon').click(function () {
+                if ($('.msg').height() == 500) {
+                    $('.msg').animate({ height: 300 }, 500);
+                }
+                else if ($('.msg').height() == 300){
+                    $('.msg').animate({ height: 500 }, 500);
+                }
+                $('div#show_emoticon_guide').toggle("slow");
+            });
+
+            // quick click
+            $('#tempTAI').keypress(function (e) {
+                if (e.which != 13) {
+                    return;
+                }
+                e.preventDefault();
+                $('#btn_danh_Tai').click();
+            });
+
+            $('#tempXIU').keypress(function (e) {
+                if (e.which != 13) {
+                    return;
+                }
+                e.preventDefault();
+                $('#btn_danh_Xiu').click();
+            });
+
+            // For Chat Message
+            $('#btn_load_more_rolled').on('click', function (e) {
+                var cStatus = document.getElementById("myStatusTai");
+                if (cStatus.value == null || cStatus.value == "") {
+                    alert("Bạn chưa đăng nhập");
+                    return false;
+                }
+                $('#current_take_rolled').val(parseInt($('#current_take_rolled').val()) + 5);
+                var num = $('#current_take_rolled').val();
+                //alert(num);
+                $.ajax({
+                    type: "GET",
+                    url: "/AdminLTE/GetMoreRolled/?num=" + num,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#div_rolled_result").html(data.dataHTML);
+                    },
+                    failure: function (data) {
+                        //setTimeout(this, 1000);
+                    },
+                    error: function (data) {
+                        //setTimeout(this, 1000);
+                    }
+                });
+                //alert("OK");
+                //e.preventDefault();
+            });
+        });
+
+        // PAGE_LOAD ///////////
+        function GetInitMessage() {
+            $.ajax({
+                type: "GET",
+                url: "/AdminLTE/GetPreviousMessage",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    //alert(JSON.stringify(data));
+                    //connection.invoke('previousmessage', data.dataHTML);
+                    $('#msgs').append(CompleteChat(data.dataHTML));
+                    $('.msg').scrollTop($('.msg').prop('scrollHeight'));
+                },
+                failure: function (data) {
+                    //alert(JSON.stringify(data));
+                },
+                error: function (data) {
+                    //alert(JSON.stringify(data));
+                }
+            });
+        }
+
+        //function GetRanks() {
+        //    $.ajax({
+        //        type: "GET",
+        //        url: "/AdminLTE/GetRanks",
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        success: function (data) {
+        //            //alert(JSON.stringify(data));
+        //            $('#rank_gadmins').html(data.gadmins);
+        //            $('#rank_gvip5').html(data.gvip5);
+        //            $('#rank_gvip4').html(data.gvip4);
+        //            $('#rank_gvip3').html(data.gvip3);
+        //            $('#rank_gvip2').html(data.gvip2);
+        //            $('#rank_gvip1').html(data.gvip1);
+        //            $('#rank_gvip0').html(data.gvip0);
+        //        },
+        //        failure: function (data) {
+        //            //alert(JSON.stringify(data));
+        //        },
+        //        error: function (data) {
+        //            //alert(JSON.stringify(data));
+        //        }
+        //    });
+        //}
+
+        function showCode(what) {
+            var imgobj = what.getElementsByTagName('img')[0];
+            var ialt = imgobj.alt;
+            $('#MessageField').val($('#MessageField').val().trim() + ' ' + ialt + ' ');
+            $('#MessageField').focus();
+            return false;
+        }
+
+        //(function GetRealTimeNotify() {
+        //    $.ajax({
+        //        type: "GET",
+        //        url: "/AdminLTE/GetRealTimeNotify",
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        success: function (data) {
+        //            if (data.minutes == 0 && data.seconds == 0) {
+        //                if (data.rs == 2) {
+        //                    if ($('#ck_ck').val() != 'displayed') {
+        //                        GetForUpdateWhenCK();
+        //                        getNotifyCK();
+        //                        $('#ck_ck').val('displayed');
+        //                    }
+        //                }
+
+        //                $('#btn_danh_Tai').attr('disabled', true);
+        //                $('#btn_danh_Xiu').attr('disabled', true);
+        //                $('#tempTAI').attr('disabled', true);
+        //                $('#tempXIU').attr('disabled', true);
+        //                $('#tempTAI').val('');
+        //                $('#tempXIU').val('');
+
+        //                if (data.tx != null && data.tx != "") {
+        //                    if (data.tx.toLowerCase() == "tai") {
+        //                        document.getElementById('timer-beep-tai').play();
+        //                    }
+        //                    else {
+        //                        document.getElementById('timer-beep-xiu').play();
+        //                    }
+
+        //                    //Gọi hàm thống kê danh sách vòng Roll
+        //                    //Gọi hàm tính số lượng TÀI / XỈU đã quay từ trước đến giờ
+        //                    refreshRolled();
+        //                    displayStatistic();
+        //                    GetForUpdatePlay();
+        //                }
+        //            }
+        //            else {
+        //                if ($("#tranTFinished").val() == 'Y') {
+        //                    $('#btn_danh_Tai').attr('disabled', false);
+        //                    $('#tempTAI').attr('disabled', false);
+        //                }
+        //                if ($("#tranXFinished").val() == 'Y') {
+        //                    $('#btn_danh_Xiu').attr('disabled', false);
+        //                    $('#tempXIU').attr('disabled', false);
+        //                }
+        //            }
+
+        //            setTimeout(GetRealTimeNotify, 1000);
+        //        },
+        //        failure: function (data) {
+        //            //alert(JSON.stringify(data));
+        //        },
+        //        error: function (data) {
+        //            //alert(JSON.stringify(data));
+        //        }
+        //    });
+        //}());
+
+        function GetForUpdatePlay() {
+            connection.invoke('updateplay', 0, 0, 0, 0, 0, 0);
+            //$.ajax({
+            //    type: "GET",
+            //    url: "/AdminLTE/GetForUpdatePlay",
+            //    contentType: "application/json; charset=utf-8",
+            //    dataType: "json",
+            //    success: function (data) {
+            //        connection.invoke('updateplay', data.ctai, data.ttai, data.ptai, data.cxiu, data.txiu, data.pxiu);
+            //    },
+            //    failure: function (data) {
+            //        //alert(JSON.stringify(data));
+            //    },
+            //    error: function (data) {
+            //        //alert(JSON.stringify(data));
+            //    }
+            //});
+        }
+
+        function GetForUpdateWhenCK() {
+            $.ajax({
+                type: "GET",
+                url: "/AdminLTE/GetForUpdateWhenCK",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    connection.invoke('updatewhenck', data.ttai, data.ptai, data.txiu, data.pxiu);
+                },
+                failure: function (data) {
+                    //alert(JSON.stringify(data));
+                },
+                error: function (data) {
+                    //alert(JSON.stringify(data));
+                }
+            });
+        }
+
+        // Temporary set is 15 message and single run
+        function GetChatMessage() {
+            //var num = $('#total_message_1').val();
+            //var numNew = 0;
+            $.ajax({
+                type: "GET",
+                url: "/AdminLTE/GetChatMessage",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    //alert(JSON.stringify(data));
+                    // new requirement
+                    $("#notification_new_import_req").text(data.reqIm);
+                    $("#no_import_req").text(data.reqIm);
+                    $("#notification_new_export_req").text(data.reqEx);
+                    $("#no_export_req").text(data.reqEx);
+                    $("#notification_new_donate_req").text(data.reqDn);
+                    $("#no_donate_req").text(data.reqDn);
+                    // current golds
+                    $("#current_my_golds").text(data.mygolds);
+                    // chat data
+                    $("#msgs").html(data.dataHTML);
+                    $('.msg').scrollTop($('.msg')[0].scrollHeight);
+                    //numNew = parseInt(data.nom);
+                    //if (numNew > num) {
+                    //    $('#total_message_1').val(numNew);
+                    //    $('.msg').scrollTop($('.msg')[0].scrollHeight);
+                    //}
+                },
+                failure: function (data) {
+                    //alert(JSON.stringify(data));
+                },
+                error: function (data) {
+                    //alert(JSON.stringify(data));
+                }
+            });
+        }
+
+        // WIN is notified --> call this
+        // PAGE_LOAD ///////////
+        function refreshRolled() {
+            var num = $('#current_take_rolled').val();
+            $.ajax({
+                type: "GET",
+                url: "/AdminLTE/GetMoreRolled/?num=" + num,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    //alert(JSON.stringify(data));
+                    $("#div_rolled_result").html(data.dataHTML);
+                },
+                failure: function (data) {
+                    //alert(JSON.stringify(data));
+                },
+                error: function (data) {
+                    //alert(JSON.stringify(data));
+                }
+            });
+        }
+
+        // WIN is notified --> call this
+        function displayStatistic() {
+            $.ajax({
+                type: "GET",
+                url: "/AdminLTE/GetStatistic",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#btnStatistic_Tai").text("Tài: " + data.tai + "/" + data.tt);
+                    $("#btnStatistic_Xiu").text("Xỉu: " + data.xiu + "/" + data.tt);
+                    if (data.hl == "HAVE_LOG") {
+                        //var res = data.lc.replace("xxx", "<br />");
+                        document.getElementById("roll_rs").innerHTML = data.lc;
+                        $('#dialog-result-roll').dialog({
+                            autoOpen: true,
+                            width: 350,
+                            show: "blind",
+                            hide: "explode",
+                            modal: true,
+                            buttons: {
+                                "Đóng": function () {
+                                    $(this).dialog("close");
+                                }
+                            },
+                            open: function (event, ui) {
+                                setTimeout(function () {
+                                    $('#dialog-result-roll').dialog('close');
+                                }, 5000);
+                            }
+                        });
+                    }
+                },
+                failure: function (data) {
+                    //alert(JSON.stringify(data));
+                },
+                error: function (data) {
+                    //alert(JSON.stringify(data));
+                }
+            });
+        }
+
+        // Chot Keo is notified --> call this
+        function getNotifyCK() {
+            $.ajax({
+                type: "GET",
+                url: "/AdminLTE/GetNotifyCK",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    if (data.hl == "HAVE_LOG") {
+                        //var res = data.lc.replace("xxx", "<br />");
+                        document.getElementById("roll_ck").innerHTML = data.lc;
+                        $('#dialog-chotkeo-roll').dialog({
+                            autoOpen: true,
+                            width: 350,
+                            show: "blind",
+                            hide: "explode",
+                            modal: true,
+                            buttons: {
+                                "Đóng": function () {
+                                    $(this).dialog("close");
+                                }
+                            },
+                            open: function (event, ui) {
+                                setTimeout(function () {
+                                    $('#dialog-chotkeo-roll').dialog('close');
+                                }, 3000);
+                            }
+                        });
+                    }
+                },
+                failure: function (data) {
+                    //alert(JSON.stringify(data));
+                },
+                error: function (data) {
+                    //alert(JSON.stringify(data));
+                }
+            });
+        }
+    </script>
+}

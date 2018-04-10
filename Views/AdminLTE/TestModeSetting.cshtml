@@ -1,0 +1,100 @@
+﻿@model TblSettings
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Chế độ Test
+        <small>cho phép bật/tắt chế độ Test</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active">Chế Độ Test</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-lg-4 col-xs-12">
+            <div class="box box-danger bg-white">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div>
+                        <div style="font-size:18px; color:#00497e; display:block; margin-bottom:15px;">TRẠNG THÁI HIỆN TẠI:</div>
+                        @if (Model.SettingContent.Trim().Equals("ALLOW"))
+                        {
+                        <div style="background:#046c00; color:#fff; font-size:24px; border-radius:5px; padding:10px 20px; text-align:center;">
+                            BẬT
+                        </div>
+                        }
+                        else if (Model.SettingContent.Trim().Equals("DENY"))
+                        {
+                        <div style="background:#4a4a4a; color:#fff; font-size:24px; border-radius:5px; padding:10px 20px; text-align:center;">
+                            TẮT
+                        </div>
+                        }
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+
+
+        <div class="col-lg-4 col-xs-12">
+            <div class="box box-warning bg-white">
+                @if (TempData["message"] != null)
+                {
+                    if (TempData["type"].ToString().Equals("OK"))
+                    {
+                        <div class="alert alert-success alert-dismissible" style="width:99%; margin:0 auto;">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-check"></i> Thao tác thành công!</h4>
+                            @TempData["message"]
+                        </div>
+                    }
+                    else if (TempData["type"].ToString().Equals("NG"))
+                    {
+                        <div class="alert alert-danger alert-dismissible" style="width:99%; margin:0 auto;">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-warning"></i> Thao tác không thành công!</h4>
+                            @TempData["message"]
+                        </div>
+                    }
+                }
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="color:#ff6a00; font-weight:700;">BẬT/TẮT CHẾ ĐỘ TEST</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div style="font-size:14px; color:#ac0000;">
+                        <form asp-action="TestModeSetting" asp-controller="AdminLTE" enctype="multipart/form-data" method="post">
+                            @if (Model.SettingContent.Trim().Equals("ALLOW"))
+                            {
+                                <input type="hidden" id="SettingContent" name="SettingContent" value="DENY" />
+                                <input type="hidden" id="SettingRemark" name="SettingRemark" value="ALLOW" />
+                                <button type="submit" class="btn btn-lg btn-danger">TẮT</button>
+                            }
+                            else if (Model.SettingContent.Trim().Equals("DENY"))
+                            {
+                                <input type="hidden" id="SettingContent" name="SettingContent" value="ALLOW" />
+                                <input type="hidden" id="SettingRemark" name="SettingRemark" value="DENY" />
+                                <button type="submit" class="btn btn-lg btn-success">BẬT</button>
+                            }
+                        </form>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+</section>
+<!-- /.content -->

@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Chat Application";
+    Layout = "_AdminLayoutLTE";
+}
+@inject ChatManager ChatManager
+
+
+<section class="special-area section_padding_150" style="margin-bottom:50px !important; box-shadow:none !important;">
+    <div class="container" style="max-width:1366px !important;">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <ul id="messages" style="height:450px; background:#feea7a;overflow:auto;">
+                    @foreach (var item in ChatManager.Messages)
+                    {
+                        <li>@item.UserId said: @item.Message</li>
+                    }
+                </ul>
+                <input class="form-control" id="message-content" />
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+@section Scripts_ChatClient{
+    <script data-main="scripts/main" src="/js/WebSocketManager.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,64 @@
+﻿@{
+    Layout = "_AdminLayoutLTE";
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Group Chat
+        <small>cho phép chát theo nhóm</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active">Group Chat</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <input type="text" id="groupchat" class="form-control" width="200" name="groupchat" placeholder="Nhập nội dung" />
+                <div id="dgchat" style="background:#71c3ff; color:#001255; font-size:16px; font-weight:700; line-height:25px; height:300px; overflow:hidden;">
+
+                </div>
+                <button id="btnchat" type="button" class="btn btn-lg">
+                    <i class="glyphicon glyphicon-apple"></i>&nbsp;CHÁT ĐÊ
+                </button>
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+</section>
+<!-- /.content -->
+
+
+
+@section Scripts_AdminLTE_GCHAT {
+<script>
+    $(function () {
+        // click
+        $('#btnchat').on('click', function (e) {
+            var msgText = $('#groupchat').val();
+            connection.invoke('chatgroupwithadmins', 'vipg', '@User.Identity.Name', msgText);
+            $('#groupchat').val('');
+            $('#dgchat').scrollTop($('#dgchat').prop('scrollHeight'));
+            $('#groupchat').focus();
+        });
+
+        $('#groupchat').keypress(function (e) {
+            if (e.which != 13) {
+                return;
+            }
+            e.preventDefault();
+            var msgText = $('#groupchat').val();
+            connection.invoke('chatgroupwithadmins', 'vipg', '@User.Identity.Name', msgText);
+            $('#groupchat').val('');
+            $('#dgchat').scrollTop($('#dgchat').prop('scrollHeight'));
+            $('#groupchat').focus();
+        });
+    });
+</script>
+}

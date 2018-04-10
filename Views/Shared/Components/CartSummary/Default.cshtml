@@ -1,0 +1,18 @@
+﻿@model TblCarts
+
+
+<div id="yourCart">
+    @if (Model.Lines.Count() > 0)
+    {
+        <small class="navbar-text">
+            <b>Your cart:</b>
+            @Model.Lines.Sum(x => x.Quality) item(s)
+            @Model.ComputeTotalValue().ToString("c")
+        </small>
+    }
+    <a style="background:#6e05c1; border:1px solid #fff; box-shadow:rgba(76, 255, 0, 0.35) 5px 5px;" class="btn btn-sm"
+        asp-controller="Cart" asp-action="Index"
+        asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
+        <i style="color:#ffd800; padding:3px;" class="fa fa-shopping-cart fa-2x"></i>
+    </a>
+</div>

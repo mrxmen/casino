@@ -1,0 +1,132 @@
+﻿@model TblOrders
+
+
+<!-- ***** Special Area Start ***** -->
+<section class="special-area section_padding_150" style="background:#fff !important;" id="cart">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- Section Heading Area -->
+                <div class="section-heading text-center">
+                    <h2>Check out now - Kiểm tra đơn hàng</h2>
+                    <p>Please enter your details, and we'll ship your goods right away!</p>
+                    <div class="line-shape"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                @if (TempData["message"] != null)
+                {
+                    <div class="text-center text-danger text-info">@TempData["message"]</div>
+                }
+            </div>
+        </div>
+
+        <form asp-action="Checkout" enctype="multipart/form-data" asp-controller="Order" method="post">
+            <h3>Ship to</h3>
+            <div class="row form-group">
+                <div class="col-10 offset-2"><span asp-validation-for="Name" class="text-danger"></span></div>
+                <label asp-for="Name" class="col-2 text-right">Name:</label>
+                <div class="col-10">
+                    <input asp-for="Name" type="text" class="form-control form-control-extend" placeholder="Full Name" required />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-10 offset-2"><span asp-validation-for="PhoneNumber" class="text-danger"></span></div>
+                <label asp-for="PhoneNumber" class="col-2 text-right">Phone:</label>
+                <div class="col-10">
+                    <input asp-for="PhoneNumber" type="text" class="form-control form-control-extend" placeholder="Phone Number" required />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label asp-for="Email" class="col-2 text-right">Email:</label>
+                <div class="col-10">
+                    <input asp-for="Email" type="text" class="form-control form-control-extend" placeholder="Email" />
+                </div>
+            </div>
+
+
+            <h3>Address</h3>
+            <div class="row form-group">
+                <div class="col-10 offset-2"><span asp-validation-for="Line1" class="text-danger"></span></div>
+                <label asp-for="Line1" class="col-2 text-right">Line 1:</label>
+                <div class="col-10">
+                    <input asp-for="Line1" type="text" class="form-control form-control-extend" placeholder="Address Line" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label asp-for="Line2" class="col-2 text-right">Line 2:</label>
+                <div class="col-10">
+                    <input asp-for="Line2" type="text" class="form-control form-control-extend" placeholder="Address Line 2" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label asp-for="Line3" class="col-2 text-right">Line 3:</label>
+                <div class="col-10">
+                    <input asp-for="Line3" type="text" class="form-control form-control-extend" placeholder="Address Line 3" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-10 offset-2"><span asp-validation-for="City" class="text-danger"></span></div>
+                <label asp-for="City" class="col-2 text-right">City:</label>
+                <div class="col-10">
+                    <input asp-for="City" type="text" class="form-control form-control-extend" placeholder="City" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-10 offset-2"><span asp-validation-for="State" class="text-danger"></span></div>
+                <label asp-for="State" class="col-2 text-right">State:</label>
+                <div class="col-10">
+                    <input asp-for="State" type="text" class="form-control form-control-extend" placeholder="State" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label asp-for="Zip" class="col-2 text-right">Zip:</label>
+                <div class="col-10">
+                    <input asp-for="Zip" class="form-control form-control-extend" placeholder="Zip" />
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-10 offset-2"><span asp-validation-for="Country" class="text-danger"></span></div>
+                <label asp-for="Country" class="col-2 text-right">Country:</label>
+                <div class="col-10">
+                    <input asp-for="Country" class="form-control form-control-extend" placeholder="Country" />
+                </div>
+            </div>
+
+
+            <h3>Payment</h3>
+            <div class="row form-group">
+                <div class="col-10 offset-2"><span asp-validation-for="PaymentMethod" class="text-danger"></span></div>
+                <label asp-for="PaymentMethod" class="col-2 text-right">Line 1:</label>
+                <div class="col-10">
+                    <select asp-for="PaymentMethod" class="form-control form-selection-extend">
+                        <option value="0" disabled>Select a method</option>
+                        <option value="Cash">Cash</option>
+                        <option value="Visa">Visa</option>
+                        <option value="Master">Master</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-10 offset-2">
+                    <input class="btn btn-lg btn-primary submit-btn-extend" style="cursor:pointer;" type="submit" value="Complete Order" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- Special Description Area -->
+
+</section>
+<!-- ***** Special Area End ***** -->

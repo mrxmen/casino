@@ -1,0 +1,102 @@
+﻿
+@model IEnumerable<TblLogTransactions>
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Lịch sử vòng Roll
+        <small>cho phép xem chi tiết về thắng thua trong các vòng Roll</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active">Lịch sử vòng Roll</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                @if (TempData["message"] != null)
+                {
+                    if (TempData["type"].ToString().Equals("OK"))
+                    {
+                        <div class="alert alert-success alert-dismissible" style="width:99%; margin:0 auto;">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-check"></i> Thao tác thành công!</h4>
+                            @TempData["message"]
+                        </div>
+                    }
+                    else if (TempData["type"].ToString().Equals("NG"))
+                    {
+                        <div class="alert alert-danger alert-dismissible" style="width:99%; margin:0 auto;">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-warning"></i> Thao tác không thành công!</h4>
+                            @TempData["message"]
+                        </div>
+                    }
+                }
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="tblListOfLogTransaction" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;">#</th>
+                                <th>Roll</th>
+                                <th>Bắt đầu</th>
+                                <th>Kết thúc</th>
+                                <th>InGame</th>
+                                <th>Đặt cửa</th>
+                                <th>Gold đặt cược</th>
+                                <th>Thời gian cược</th>
+                                <th>Kết quả</th>
+                                <th>Số dư sau đặt cược</th>
+                                <th>Gold nhận được</th>
+                                <th>Số dư sau kết quả</th>
+                                <th>Thời gian thanh toán</th>
+                                <th>Thông tin diễn giải</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Count() == 0)
+                            {
+                                <tr><td colspan="12">Không có lịch sử nào</td></tr>
+                            }
+                            else
+                            {
+                                int i = 1;
+                                foreach (TblLogTransactions acc in Model)
+                                {
+                                <tr>
+                                    <td>@i.ToString()</td>
+                                    <td>@acc.RollID.ToString("00000")</td>
+                                    <td>@acc.RollStartedTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                    <td>@acc.RollFinishedTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                    <td>@acc.UserInGame</td>
+                                    <td>@acc.PlayType</td>
+                                    <td>@acc.GoldPlay.ToString("n0")</td>
+                                    <td>@acc.PlayedTime.ToString("HH:mm:ss")</td>
+                                    <td>@acc.ResultType</td>
+                                    <td>@acc.GoldAfterPlay.ToString("n0")</td>
+                                    <td>@acc.GoldGet.ToString("n0")</td>
+                                    <td>@acc.GoldAfterGet.ToString("n0")</td>
+                                    <td>@acc.GotTime.ToString("HH:mm:ss")</td>
+                                    <td>@acc.Remark</td>
+                                </tr>
+                                    i++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+</section>
+<!-- /.content -->

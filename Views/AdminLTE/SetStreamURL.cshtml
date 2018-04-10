@@ -1,0 +1,70 @@
+﻿@model TblSettings
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Thiết lập Stream URL
+        <small>cho phép quản trị thiết lập URL của Stream</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active">Thiết lập Stream URL</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-lg-6 col-xs-12">
+            <div class="box box-success">
+                @if (TempData["message"] != null)
+                {
+                    if (TempData["type"].ToString().Equals("OK"))
+                    {
+                        <div class="alert alert-success alert-dismissible" style="width:99%; margin:0 auto;">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-check"></i> Thao tác thành công!</h4>
+                            @TempData["message"]
+                        </div>
+                    }
+                    else if (TempData["type"].ToString().Equals("NG"))
+                    {
+                        <div class="alert alert-danger alert-dismissible" style="width:99%; margin:0 auto;">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-warning"></i> Thao tác không thành công!</h4>
+                            @TempData["message"]
+                        </div>
+                    }
+                }
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <form asp-action="SetStreamURL" asp-controller="AdminLTE" enctype="multipart/form-data" method="post">
+                        <div class="form-group">
+                            <input type="hidden" asp-for="ID" />
+                            <label asp-for="SettingCode">Stream URL</label>
+                            <div class="text-info" style="margin:5px 0;">URL phải có dạng:  https://www.youtube.com/<span class="text-blue text-bold">embed</span>/iyQTCS6ohxo<span class="text-red text-bold">?autoplay=1</span></div>
+                            <div class="text-blue" style="margin:5px 0;">Địng dạng: <b>embed</b></div>
+                            <div class="text-red" style="margin:5px 0;">Sau đó cho thêm đuôi:  <b>?autoplay=1</b></div>
+                            <input type="text" required asp-for="SettingContent" class="form-control" placeholder="Nhập URL" />
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" id="btnSetStreamURL"
+                                    class="btn btn-lg btn-primary">
+                                <i class="glyphicon glyphicon-save"></i> Lưu Stream URL
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+</section>
+<!-- /.content -->

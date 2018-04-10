@@ -1,0 +1,115 @@
+﻿@model RoleEditModel
+@{
+    Layout = "_AdminLayoutLTE";
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Cập nhật nhóm
+        <small>cho phép thêm / xóa thành viên</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li><a href="#">Quản Lý Nhóm</a></li>
+        <li class="active">Cập nhật nhóm</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <form asp-action="EditRoleUsers" method="post">
+                <input type="hidden" name="roleName" value="@Model.Role.Name" />
+                <input type="hidden" name="roleId" value="@Model.Role.Id" />
+
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-primary">Lưu kết quả</button>
+                    <a asp-action="RolesManager" asp-controller="AdminLTE" class="btn btn-default pull-right">Danh sách nhóm</a>
+                </div>
+                <br>
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title" style="color:#037c13;">Thêm thành viên</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table id="tblListUsersForAdd" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Tài khoản</th>
+                                    <th>Lựa chọn</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.NonMembers.Count() == 0)
+                    {
+                        <tr><td colspan="2">Tất cả tài khoản đều là thành viên nhóm</td></tr>
+        }
+        else
+        {
+            foreach (AppUser user in Model.NonMembers)
+            {
+                <tr>
+                    <td class="break_long_word">@user.UserName</td>
+                    <td style="line-height:35px; width:80px; color:#037c13;">
+                        <input type="checkbox" name="IdsToAdd" value="@user.Id" />&nbsp;Thêm
+                    </td>
+                </tr>
+}
+}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+
+
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title" style="color:#d00202;">Thành viên hiện tại</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table id="tblListUsersForRemove" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Tài khoản</th>
+                                    <th>Lựa chọn</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.NonMembers.Count() == 0)
+                    {
+                        <tr><td colspan="2">Không có thành viên nào</td></tr>
+        }
+        else
+        {
+            foreach (AppUser user in Model.Members)
+            {
+                <tr>
+                    <td class="break_long_word">@user.UserName</td>
+                    <td style="line-height:35px; width:80px; color:#d00202;">
+                        <input type="checkbox" name="IdsToDelete" value="@user.Id" />&nbsp;Xóa
+                    </td>
+                </tr>
+}
+}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-primary">Lưu kết quả</button>
+                    <a asp-action="RolesManager" asp-controller="AdminLTE" class="btn btn-default pull-right">Danh sách nhóm</a>
+                </div>
+            </form>
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->

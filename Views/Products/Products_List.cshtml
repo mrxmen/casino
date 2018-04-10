@@ -1,0 +1,150 @@
+﻿@model IQueryable<TblProducts>
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        List Of Products
+        <small>allow to manage all products</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Products</a></li>
+        <li class="active">List Of Products</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Manage products with full functionality</h3>
+                </div>
+                @if (TempData["type"] != null)
+                {
+                    if (TempData["type"].ToString().Equals("OK"))
+                    {
+                        if (TempData["message"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible" style="width:99%; margin:0 auto;">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <h4><i class="icon fa fa-check"></i> Operation Successful!</h4>
+                                @TempData["message"]
+                            </div>
+                        }
+                    }
+                    else if (TempData["type"].ToString().Equals("NG"))
+                    {
+                        if (TempData["message"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible" style="width:99%; margin:0 auto;">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <h4><i class="icon fa fa-ban"></i> Operation Failed!</h4>
+                                @TempData["message"]
+                            </div>
+                        }
+                    }
+                }
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="tblListOfProducts" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;">#</th>
+                                <th>Product ID</th>
+                                <th>Category</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                                <th style="width:110px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Count() == 0)
+                            {
+                                <tr><td colspan="7">No available products</td></tr>
+                            }
+                            else
+                            {
+                                int i = 1;
+                                foreach (TblProducts prod in Model)
+                                {
+                                    <tr>
+                                        <td>@i.ToString()</td>
+                                        <td>@prod.ProductID</td>
+                                        <td>@prod.Category</td>
+                                        <td><span class="break_long_word">@prod.Name</span></td>
+                                        <td class="text-right">@prod.Price.ToString("n0")</td>
+                                        <td>@prod.Description</td>
+                                        <td style="line-height:35px;">
+                                            <form asp-action="Product_Delete" asp-controller="Products" id="@prod.ProductID" asp-route-id="@prod.ProductID" method="post">
+                                                <a asp-action="Product_Edit" asp-controller="Products" asp-route-id="@prod.ProductID"
+                                                   class="btn btn-sm btn-info"><i class="glyphicon glyphicon-pencil"></i>Edit</a>
+                                                <button type="button" id="btnDelUserModelForAdmin" asp-route-id="@prod.ProductID"
+                                                        class="btn btn-sm btn-danger"
+                                                        data-toggle="modal" data-target="#modal-warning-@prod.ProductID">
+                                                    <i class="glyphicon glyphicon-trash"></i> Delete
+                                                </button>
+                                            </form>
+
+
+
+                                            <!-- /.modal -->
+                                            <div class="modal modal-danger fade" id="modal-warning-@prod.ProductID">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            <h4 class="modal-title">Delete Product</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Are you sure want to delete this product: @prod.Name ?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cancel</button>
+                                                            <button id="btn_@prod.ProductID" type="button" class="btn btn-outline" onclick="myFunction(this);">Delete</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Product ID</th>
+                                <th>Category</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <a class="btn btn-primary" asp-action="Product_Create" asp-controller="Products">Create</a>
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->

@@ -1,0 +1,102 @@
+﻿@model CreateUserModel
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Tạo người dùng
+        <small>cho phép tạo tài khoản mới</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li><a href="#">Quản ý Người Dùng</a></li>
+        <li class="active">Tạo người dùng</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+            <!-- Form Element sizes -->
+
+
+            <!-- Input addon -->
+            <div class="box box-info">
+                @*<div class="box-header with-border">
+                    <h3 class="box-title">Please fill out the form below</h3>
+                </div>*@
+                <div class="box-body">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <form asp-action="CreateUser" asp-controller="AdminLTE" method="post">
+                        <div class="input-group">
+                            <span class="input-group-addon" style="color:#0094ff;">@@</span>
+                            <input asp-for="Name" required class="form-control" placeholder="Tài khoản" />
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon" style="color:#ff6a00;"><i class="fa fa-unlock"></i></span>
+                            <input asp-for="Password" required class="form-control" placeholder="Mật khẩu" />
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon" style="color:#0b7000;"><i class="fa fa-gamepad"></i></span>
+                            <input type="text" asp-for="InGame" required class="form-control" placeholder="Tên trong Game" />
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon" style="color:#0b7000;"><i class="fa fa-user-circle-o"></i></span>
+                            <input type="text" asp-for="FullName" class="form-control" placeholder="Tên hiển thị" />
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon" style="color:#0b7000;"><i class="fa fa-server"></i></span>
+                            <select type="text" asp-for="GameServerID">
+                                <option selected value="1">Đại Mạc</option>
+                                <option value="2">Thiên Đỉnh</option>
+                                <option value="3">Núi Sương Bạc</option>
+                                <option value="4">Biển Lục Nam</option>
+                                <option value="5">Đồng Thủy Nguyệt</option>
+                                <option value="6">Trường Hồng Môn</option>
+                            </select>
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon" style="color:#d94900;"><i class="fa fa-group"></i></span>
+                            <select type="text" asp-for="RoleID">
+                                <option selected value="42d52d9d-052b-40c7-9593-154993dad380">Thành Viên</option>
+                                @if (User.IsInRole("SuperAdmins") || User.IsInRole("Admins")) { 
+                                <option value="43eafef6-2ee0-4428-9a3f-d1a87969dea1">VIP Phổ Thông</option>
+                                <option value="75888143-3075-43f0-8244-f80f34df8aec">VIP Bạc</option>
+                                <option value="b777c9ee-1e5c-4ea5-a6ca-8e2c0910f239">VIP Vàng</option>
+                                <option value="fa4afc1f-5d77-4900-b415-12e71bb2fb7e">VIP Kim Cương</option>
+                                <option value="b2ca693c-555e-49b9-becd-99308515d382">VIP Ruby</option>
+                                <option value="933933f6-60d2-423c-9549-0910b7149865">Roller</option>
+                                <option value="35072923-5cf4-49b5-a507-16cc9f364387">Khuyễn Mãi (Không Tính Phí)</option>
+                                <option value="fc19724f-5fb8-4b22-a0b2-d85dbb6b1e1a">Nhóm Test</option>
+                                }
+                            </select>
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon" style="color:#0b7000;"><i class="fa fa-envelope-o"></i></span>
+                            <input type="email" asp-for="Email" class="form-control" placeholder="email@example.com" />
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-info pull-right">Tạo người dùng</button>
+                            <a asp-action="UserManager" asp-controller="AdminLTE" class="btn btn-default">Danh sách người dùng</a>
+                        </div>
+                        <!-- /input-group -->
+                    </form>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!--/.col (left) -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->

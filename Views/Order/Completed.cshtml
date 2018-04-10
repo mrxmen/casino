@@ -1,0 +1,35 @@
+﻿@model int
+
+<!-- ***** Special Area Start ***** -->
+<section class="special-area bg-white section_padding_100" id="about">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- Section Heading Area -->
+                <div class="section-heading text-center" style="margin-top:20px;">
+                    <h2>Thanks!</h2>
+                    <div class="line-shape"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Single Special Area -->
+            <div class="col-12">
+                <div class="single-special text-center wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="single-icon">
+                        <i style="color:#028913;" class="ti-check" aria-hidden="true"></i>
+                    </div>
+                    <h4>Thanks for placing your order.</h4>
+                    <p>We'll ship your goods as soon as possible.</p>
+                    <div style="margin-top:15px;">
+                        <a asp-action="OrderView" asp-controller="Order" asp-route-orderid="@Model">View Order</a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ***** Special Area End ***** -->
+

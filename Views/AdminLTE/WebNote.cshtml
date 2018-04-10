@@ -1,0 +1,76 @@
+﻿@model TblSettings
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Thông tin chú ý
+        <small>cho phép viết thông tin chú ý</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active">Thông Tin Chú Ý</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-lg-8 col-xs-12">
+            @if (TempData["message"] != null)
+            {
+                if (TempData["type"].ToString().Equals("OK"))
+                {
+                    <div class="alert alert-success alert-dismissible" style="width:99%; margin:0 auto;">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-check"></i> Thao tác thành công!</h4>
+                        @TempData["message"]
+                    </div>
+                }
+                else if (TempData["type"].ToString().Equals("NG"))
+                {
+                    <div class="alert alert-danger alert-dismissible" style="width:99%; margin:0 auto;">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i> Thao tác không thành công!</h4>
+                        @TempData["message"]
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-xs-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">THÔNG TIN CHÚ Ý</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <form asp-action="WebNote" asp-controller="AdminLTE" enctype="multipart/form-data" method="post">
+                        <div class="form-group">
+                            <label>Nội dung thông tin</label>
+                            <textarea id="ckeditorcontent" name="ckeditorcontent" style="height:350px !important;" rows="30" cols="80">
+                                @Model.SettingContent                  
+                            </textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" id="btnSaveWebNote"
+                                    class="btn btn-lg btn-success">
+                                <i class="glyphicon glyphicon-save"></i> Lưu Chú Ý
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+</section>
+<!-- /.content -->

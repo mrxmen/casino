@@ -1,0 +1,157 @@
+﻿@model ProfitViewModel
+
+@{
+    Layout = "_AdminLayoutLTE";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Lợi nhuận
+        <small>cho phép xem thông tin lợi nhuận</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li><a href="#">Quản Lý Tài Khoản</a></li>
+        <li class="active">Lợi nhuận</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box bg-green">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div style="margin-top:5px; margin-bottom: 5px; padding:5px; font-size:24px;">
+                        Lợi nhuận <span style="color:#b6ff00;">@DateTime.Now.ToString("dd/MM/yyyy")</span>: <span style="color:#ffe555; font-weight:700;">@Model.Today_Profit.ToString("n0") </span><img src="/User/img/gold.png" />
+                        <div style="float:right;">Tổng lợi nhuận đến <span style="color:#b6ff00;">@DateTime.Now.ToString("dd/MM/yyyy")</span>: @Model.Total_Profit.ToString("n0") <img src="/User/img/gold.png" /></div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                @if (TempData["message"] != null)
+    {
+        if (TempData["type"].ToString().Equals("OK"))
+        {
+            <div class="alert alert-success alert-dismissible" style="width:99%; margin:0 auto;">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-check"></i> Thao tác thành công!</h4>
+                @TempData["message"]
+            </div>
+}
+else if (TempData["type"].ToString().Equals("NG"))
+{
+            <div class="alert alert-danger alert-dismissible" style="width:99%; margin:0 auto;">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-warning"></i> Thao tác không thành công!</h4>
+                @TempData["message"]
+            </div>
+}
+}
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="color:#ff6a00; font-weight:700;">BẢNG LỢI NHUẬN TÍNH THEO NGÀY</h3>
+                </div>
+                <div class="box-body">
+                    <table id="tblListOfProfitByDay" class="table table-bordered table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;">#</th>
+                                <th>Ngày</th>
+                                <th>Số dòng</th>
+                                <th>Tổng Gold <img src="/User/img/gold.png" /></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Profits.Count() == 0)
+                {
+                    <tr><td colspan="4">Không có bản ghi nào</td></tr>
+    }
+    else
+    {
+        int i = 1;
+        foreach (DayProfitViewModel dayPro in Model.Profits)
+        {
+            <tr>
+                <td>@i.ToString()</td>
+                <td>@dayPro.Day.ToString("dd/MM/yyyy")</td>
+                <td>@dayPro.TotalRecords.ToString("n0")</td>
+                <td style="font-weight:700; color:#ff6a00; font-size:15px;">@dayPro.TotalGold.ToString("n0")</td>
+            </tr>
+i++;
+}
+}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="color:#34b000; font-weight:700;">DANH SÁCH CHI TIẾT</h3>
+                </div>
+                <div class="box-body">
+                    <table id="tblListOfDetailProfit" class="table table-bordered table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;">#</th>
+                                <th>Ngày</th>
+                                <th>Gold <img src="/User/img/gold.png" /></th>
+                                <th>Tài khoản</th>
+                                <th>InGame</th>
+                                <th>Loại</th>
+                                <th>Roll</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Profits.Count() == 0)
+                {
+                    <tr><td colspan="6">Không có bản ghi nào</td></tr>
+    }
+    else
+    {
+        int i = 1;
+        foreach (TblAccountProfit accPro in Model.Details)
+        {
+            <tr>
+                <td>@i.ToString()</td>
+                <td>@accPro.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
+                <td style="font-weight:700; color:#ff6a00;">@accPro.ProfitGold.ToString("n0")</td>
+                <td>@accPro.UserName</td>
+                <td>@accPro.UserInGame</td>
+                <td>@accPro.ProfitType</td>
+                <th>@accPro.RollID</th>
+            </tr>
+i++;
+}
+}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+</section>
+<!-- /.content -->
