@@ -72,7 +72,7 @@
                     @foreach (AspNetRolesExtend role in _LST_ROLE_EXTEND)
                         {
                             <div style="display:inline-block; margin-bottom:15px; font-weight:700; width:130px; text-align:center;">
-                                <div style="margin-bottom:15px;"><i class="fa fa-user-secret margin-r-5"></i> @role.RoleName</div>
+                                <div style="margin-bottom:15px;"><i class="fa fa-user-secret margin-r-5"></i> @role.Remark</div>
                                 <img src="@role.RoleImg" />
                             </div>
                         }
@@ -102,8 +102,11 @@
                                 <label asp-for="Avatar" class="col-sm-2 control-label">Avatar</label>
                                 <div class="col-sm-10">
                                     <img class="img-responsive img-circle" src="@Model.Avatar" width="48" />
-                                    <input type="file" name="file">
-                                    <input type="hidden" asp-for="Avatar" />
+                                    @if (User.IsInRole("SuperAdmins") || User.IsInRole("Admins") || User.IsInRole("Moderators"))
+                                    {
+                                        <input type="file" name="file">
+                                        <input type="hidden" asp-for="Avatar" />
+                                    }
                                 </div>
                             </div>
                             <div class="form-group">
