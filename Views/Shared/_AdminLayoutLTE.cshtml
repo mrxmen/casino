@@ -475,6 +475,7 @@
                 <!-- Sidebar toggle button-->
                 <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                     <span class="sr-only">Toggle navigation</span>
+                    <input type="hidden" id="abcxyz" name="abcxyz" />
                 </a>
 
                 @if (User.Identity.IsAuthenticated)
@@ -1501,8 +1502,8 @@
             return msgHTML;
         }
 
-        function AddMessage(msg, uid, igame, usname, uavatar, utitlecolor, rname, ravatar, rsmallimg) {
-            var ChatData = { Message: msg, Chatuserid: uid, Chatingame: igame, Chatusername: usname, Chatavatar: uavatar, Chattitlecolor: utitlecolor, Rname: rname, Ravatar: ravatar, RavatarSmall: rsmallimg };
+        function AddMessage(msg, uid, igame, usname, uavatar, utitlecolor, rname, ravatar, rsmallimg, pip, mac) {
+            var ChatData = { Message: msg, Chatuserid: uid, Chatingame: igame, Chatusername: usname, Chatavatar: uavatar, Chattitlecolor: utitlecolor, Rname: rname, Ravatar: ravatar, RavatarSmall: rsmallimg, Publicip: pip, Macaddress: mac };
             if (ChatData.Message != null && ChatData.Message != "") {
                 $.ajax({
                     type: "POST",
@@ -1532,13 +1533,14 @@
             connection.invoke('send', getMsgHTML());
             //AddMessage
             var ckk = stripScripts($('#MessageField').val());
+            var pippps = $('#abcxyz').val();
             if (ckk) {
                 var kill_it = "ĐÂY CHÍNH LÀ THẰNG PHÁ WEB <-- KILL NÓ";
-                AddMessage(kill_it, userID, ingame, userName, userAvatar, userTitleColor, roleName, roleImg, roleImgSmall);
+                AddMessage(kill_it, userID, ingame, userName, userAvatar, userTitleColor, roleName, roleImg, roleImgSmall, pippps, "");
             }
             else {
                 var reck = $('#MessageField').val().replace('script', '');
-                AddMessage(reck, userID, ingame, userName, userAvatar, userTitleColor, roleName, roleImg, roleImgSmall);
+                AddMessage(reck, userID, ingame, userName, userAvatar, userTitleColor, roleName, roleImg, roleImgSmall, pippps, "");
             }
             $('#MessageField').val('');
             $('.msg').scrollTop($('.msg').prop('scrollHeight'));
@@ -1560,13 +1562,14 @@
             connection.invoke('send', getMsgHTML());
             //AddMessage
             var ckk = stripScripts($('#MessageField').val());
+            var pippps = $('#abcxyz').val();
             if (ckk) {
                 var kill_it = "ĐÂY CHÍNH LÀ THẰNG PHÁ WEB <-- KILL NÓ";
-                AddMessage(kill_it, userID, ingame, userName, userAvatar, userTitleColor, roleName, roleImg, roleImgSmall);
+                AddMessage(kill_it, userID, ingame, userName, userAvatar, userTitleColor, roleName, roleImg, roleImgSmall, pippps, "");
             }
             else {
                 var reck = $('#MessageField').val().replace('script', '');
-                AddMessage(reck, userID, ingame, userName, userAvatar, userTitleColor, roleName, roleImg, roleImgSmall);
+                AddMessage(reck, userID, ingame, userName, userAvatar, userTitleColor, roleName, roleImg, roleImgSmall, pippps, "");
             }
             $('#MessageField').val('');
             $('.msg').scrollTop($('.msg').prop('scrollHeight'));
@@ -1577,6 +1580,62 @@
     </script>
 
     <script>
+        function GetPublicIP() {
+            //$.ajax({
+            //    type: "GET",
+            //    //url: "/AdminLTE/GetPublicIP",
+            //    url: "http://jsonip.com",
+            //    contentType: "application/json; charset=utf-8",
+            //    dataType: "json",
+            //    success: function (data) {
+            //        alert(JSON.stringify(data));
+            //        //alert(data.ip);
+            //        //$('#abcxyz').val(data.pip);
+            //    },
+            //    failure: function (data) {
+            //        alert(JSON.stringify(data));
+            //    },
+            //    error: function (data) {
+            //        alert(JSON.stringify(data));
+            //    }
+            //});
+
+            /*//freegeoip.net/json/?callback=?*/
+            /*//jsonip.com/*/
+            $.getJSON('//jsonip.com/', function (data) {
+                //alert(JSON.stringify(data.ip));
+                $('#abcxyz').val(data.ip);
+            });
+        }
+
+        function GetMAC() {
+            //This function requires following option to be enabled without prompting
+            //In Internet Options for IE 5.5 and up
+            //Tab Security (Local Internet Sites)
+            //Custom Level button
+            //"Initialize and script ActiveX control not marked as safe." option enabled
+            try {
+                var locator = new ActiveXObject("WbemScripting.SWbemLocator");
+                var service = locator.ConnectServer(".");
+
+                //Get properties of the network devices with an active IP address
+                var properties = service.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfiguration" +
+                    " WHERE IPEnabled=TRUE");
+
+                var e = new Enumerator(properties);
+
+                //Take first item from the list and return MACAddress
+                var p = e.item(0);
+            }
+            catch (exception) {
+                alert('Add your domain to Trusted Sites.');
+                window.location = "about:blank";
+            }
+
+            //return p.MACAddress;
+            alert(p.MACAddress);
+        }
+
         function GetRanks() {
             $.ajax({
                 type: "GET",
@@ -1602,14 +1661,26 @@
         }
 
         $(function () {
-            setTimeout(function () {
-            //update Roll_Status Background
+            GetPublicIP();
+
+            //GetMAC();
+
+            //update status rolling
             if ($('#d2_roll_status').text() == "Đang nhận") {
                 $('#d2_roll_status_bg').css("background-color", "#00a400 !important");
             }
             else {
                 $('#d2_roll_status_bg').css("background-color", "#525252 !important");
             }
+
+            setTimeout(function () {
+            ////update Roll_Status Background
+            //if ($('#d2_roll_status').text() == "Đang nhận") {
+            //    $('#d2_roll_status_bg').css("background-color", "#00a400 !important");
+            //}
+            //else {
+            //    $('#d2_roll_status_bg').css("background-color", "#525252 !important");
+            //}
             GetRanks();
             }, 2000); //2s
         });
