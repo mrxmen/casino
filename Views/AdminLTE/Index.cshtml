@@ -54,6 +54,8 @@
 </div>
 <!-- Main content -->
 <section class="content">
+    @Html.AntiForgeryToken()
+
     <!-- Small boxes (Stat box) -->
     <div style="display:none;">
         <audio id="timer-beep-tai"><source src="/User/audio/win/tai_win.mp3" /></audio>
@@ -176,72 +178,73 @@
             </div>
             <!-- /.nav-tabs-custom -->
             <!-- Notice -->
-            @if (User.Identity.IsAuthenticated) {
-            <div class="box box-solid bg-aqua-active">
-                <div class="box-header">
-                    <i class="fa fa-th"></i>
-                    <h3 class="box-title">Thông Tin Cần Chú Ý</h3>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn bg-teal btn-sm" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="box-body border-radius-none" style="padding:0 !important;">
-                    <div style="background:#fff; padding:15px; line-height:32px;">
-                        <div style="color:#000;">
-                            @Html.Raw(Model.WebNote?.SettingContent)
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="box box-solid bg-aqua-active">
+                    <div class="box-header">
+                        <i class="fa fa-th"></i>
+                        <h3 class="box-title">Thông Tin Cần Chú Ý</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn bg-teal btn-sm" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
                         </div>
+                    </div>
+                    <div class="box-body border-radius-none" style="padding:0 !important;">
+                        <div style="background:#fff; padding:15px; line-height:32px;">
+                            <div style="color:#000;">
+                                @Html.Raw(Model.WebNote?.SettingContent)
+                            </div>
 
 
-                        <span style="color:#ff0000; font-weight:700;font-size:16px;">Quyền Lợi VIP</span><br />
-                        <table class="table table-bordered table-striped" style="color:#000;">
-                            <tr>
-                                <th>#</th>
-                                <th>Cấp Bậc</th>
-                                <th>Số Lượng</th>
-                                <th>Phí Chơi Game Tài Xỉu</th>
-                            </tr>
-                            <tr>
-                                <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip5")).RoleImg" width="48" /></td>
-                                <td class="noticeIndex">VIP Ruby</td>
-                                <td class="noticeIndex">1 Người</td>
-                                <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip5")).PercentReturn %</td>
-                            </tr>
-                            <tr>
-                                <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip4")).RoleImg" width="48" /></td>
-                                <td class="noticeIndex">VIP Kim Cương</td>
-                                <td class="noticeIndex">2 Người</td>
-                                <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip4")).PercentReturn %</td>
-                            </tr>
-                            <tr>
-                                <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip3")).RoleImg" width="48" /></td>
-                                <td class="noticeIndex">VIP Vàng</td>
-                                <td class="noticeIndex">5 Người</td>
-                                <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip3")).PercentReturn %</td>
-                            </tr>
-                            <tr>
-                                <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip2")).RoleImg" width="48" /></td>
-                                <td class="noticeIndex">VIP Bạc</td>
-                                <td class="noticeIndex">10 Người</td>
-                                <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip2")).PercentReturn %</td>
-                            </tr>
-                            <tr>
-                                <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip1")).RoleImg" width="48" /></td>
-                                <td class="noticeIndex">VIP Phổ Thông</td>
-                                <td class="noticeIndex">20 Người</td>
-                                <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip1")).PercentReturn %</td>
-                            </tr>
-                            <tr>
-                                <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip0")).RoleImg" width="48" /></td>
-                                <td class="noticeIndex">Thành Viên</td>
-                                <td class="noticeIndex">Không Giới Hạn</td>
-                                <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip0")).PercentReturn %</td>
-                            </tr>
-                        </table>
+                            <span style="color:#ff0000; font-weight:700;font-size:16px;">Quyền Lợi VIP</span><br />
+                            <table class="table table-bordered table-striped" style="color:#000;">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Cấp Bậc</th>
+                                    <th>Số Lượng</th>
+                                    <th>Phí Chơi Game Tài Xỉu</th>
+                                </tr>
+                                <tr>
+                                    <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip5")).RoleImg" width="48" /></td>
+                                    <td class="noticeIndex">VIP Ruby</td>
+                                    <td class="noticeIndex">1 Người</td>
+                                    <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip5")).PercentReturn %</td>
+                                </tr>
+                                <tr>
+                                    <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip4")).RoleImg" width="48" /></td>
+                                    <td class="noticeIndex">VIP Kim Cương</td>
+                                    <td class="noticeIndex">2 Người</td>
+                                    <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip4")).PercentReturn %</td>
+                                </tr>
+                                <tr>
+                                    <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip3")).RoleImg" width="48" /></td>
+                                    <td class="noticeIndex">VIP Vàng</td>
+                                    <td class="noticeIndex">5 Người</td>
+                                    <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip3")).PercentReturn %</td>
+                                </tr>
+                                <tr>
+                                    <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip2")).RoleImg" width="48" /></td>
+                                    <td class="noticeIndex">VIP Bạc</td>
+                                    <td class="noticeIndex">10 Người</td>
+                                    <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip2")).PercentReturn %</td>
+                                </tr>
+                                <tr>
+                                    <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip1")).RoleImg" width="48" /></td>
+                                    <td class="noticeIndex">VIP Phổ Thông</td>
+                                    <td class="noticeIndex">20 Người</td>
+                                    <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip1")).PercentReturn %</td>
+                                </tr>
+                                <tr>
+                                    <td class="noticeIndex"><img src="@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip0")).RoleImg" width="48" /></td>
+                                    <td class="noticeIndex">Thành Viên</td>
+                                    <td class="noticeIndex">Không Giới Hạn</td>
+                                    <td class="noticeIndex">@Model.ExtendRoles.FirstOrDefault(r => r.RoleName.Equals("Vip0")).PercentReturn %</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
             }
             <!-- /.box -->
         </section>
@@ -270,18 +273,19 @@
                 </div>
                 <!-- /.chat -->
                 <div class="box-footer">
-                    @if (User.Identity.IsAuthenticated) {
-                    <div class="input-group" style="width:98%;">
-                        <a id="guide_chat_icon" href="javascript:void(0);" style="overflow:hidden; display:inline-block;width:10%;float:left;">
-                            <img src="/User/img/happy.png" alt="Biểu tượng chát" title="Biểu tượng chát" style="float:left; margin-right:2px; width:100%; max-width:36px;" />
-                        </a>
-                        <input id="MessageField" type="text" class="form-control" maxlength="69" style="color:#09469a; display:inline-block; float:left; margin-top:1px; width:89%;" placeholder="Gõ nội dung và bấm Enter ..." />
-                        <div class="input-group-btn">
-                            <input type="hidden" id="total_message_1" name="total_message_1" value="0" />
-                            <button type="button" id="btnSendMessage" class="btn btn-success"><i class="fa fa-send-o"></i></button>
-                        </div>
+                    @if (User.Identity.IsAuthenticated)
+            {
+                <div class="input-group" style="width:98%;">
+                    <a id="guide_chat_icon" href="javascript:void(0);" style="overflow:hidden; display:inline-block;width:10%;float:left;">
+                        <img src="/User/img/happy.png" alt="Biểu tượng chát" title="Biểu tượng chát" style="float:left; margin-right:2px; width:100%; max-width:36px;" />
+                    </a>
+                    <input id="MessageField" type="text" class="form-control" maxlength="69" style="color:#09469a; display:inline-block; float:left; margin-top:1px; width:89%;" placeholder="Gõ nội dung và bấm Enter ..." />
+                    <div class="input-group-btn">
+                        <input type="hidden" id="total_message_1" name="total_message_1" value="0" />
+                        <button type="button" id="btnSendMessage" class="btn btn-success"><i class="fa fa-send-o"></i></button>
                     </div>
-                    }
+                </div>
+    }
                     <div class="input-group">
                         <div id="show_emoticon_guide" style="display:none;">
                             <!-- Custom Tabs -->
@@ -418,28 +422,7 @@
                 </div>
                 <div class="box-body" style="padding:0 !important;">
                     <div style="background:#fff; color:#000; padding:15px; overflow:hidden;">
-                        @Html.AntiForgeryToken()
-
-                        <input id="userID" name="userID" value="@Model.CurrentUser?.Id" type="hidden" />
                         <div class="form-group">
-                            <label name="goldForDonate">Số Gold Donate</label>
-                            <input id="inputGoldForDonate" name="inputGoldForDonate" type="number" min="1" class="form-control" placeholder="Nhập số Gold donate" />
-                        </div>
-
-                        <div class="form-group">
-                            <label name="reasonForDonate">Nội dung</label>
-                            <input id="reasonForDonate" name="reasonForDonate" maxlength="40" type="text" required class="form-control" placeholder="Nội dung (tối đa 40 ký tự)" />
-                        </div>
-
-                        <div class="form-group">
-                            @if (User.Identity.IsAuthenticated) {
-                            <button type="button" id="btnSendDonateForUser"
-                                    class="btn btn-lg btn-primary"
-                                    onclick="return CheckPlayDonate('inputGoldForDonate', 'reasonForDonate', 'myCurrentGoldDonate');">
-                                <i class="glyphicon glyphicon-send"></i> Donate
-                            </button>
-                            }
-
                             <button type="button" id="btnStatistic_Tai"
                                     class="btn btn-lg btn-danger pull-right" style="margin-left:10px;">
                                 Tài: @Model.RollStatistic.Total_Tai/@Model.RollStatistic.Total_Rolls
@@ -452,32 +435,6 @@
 
                             <input id="myCurrentGoldDonate" name="myCurrentGoldDonate" value="@Model.CurrentUser?.MyGolds" type="hidden" />
                         </div>
-
-                        <!-- /.modal -->
-                        <div class="modal modal-warning fade" id="modal-userdonate">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        <h4 class="modal-title-donate">Donate</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div id="modal_confirm_donate_title" style="display:block; margin-bottom:5px;"></div>
-                                        <div id="modal_confirm_donate_gold" style="display:block; margin-bottom:5px;"></div>
-                                        <div id="modal_confirm_donate_reason" style="display:block; margin-bottom:5px;"></div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button id="modal_confirm_donate_btn_cancel" type="button" class="btn btn-outline pull-left" data-dismiss="modal">Bỏ qua</button>
-                                        <button id="btn_@Model.CurrentUser?.Id" type="button" class="btn btn-outline modal_confirm_donate_btn_submit" onclick="myFunction(this);">Donate</button>
-                                    </div>
-                                </div>
-                                <!-- /.modal-content -->
-                            </div>
-                            <!-- /.modal-dialog -->
-                        </div>
-
                     </div>
                 </div>
             </div>
