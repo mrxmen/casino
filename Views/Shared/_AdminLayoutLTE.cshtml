@@ -794,8 +794,16 @@
                     else
                     {
                         <!-- Login -->
-                        <li class="bg-green" style="margin-top:20px;">
-                            <a asp-action="Login" asp-controller="Account">
+                        <li style="margin-top:20px;">
+                            <div style="padding:10px;">
+                                <div style="margin-bottom:20px;">
+                                    <input id="in_user" name="in_user" type="text" class="form-control" placeholder="Tên đăng nhập" style="border-radius:2px; height:42px; line-height:42px;" />
+                                </div>
+                                <div style="margin-bottom:15px;">
+                                    <input id="in_pass" name="in_pass" type="password" class="form-control" placeholder="Mật khẩu đăng nhập" style="border-radius:2px; height:42px; line-height:42px;" />
+                                </div>
+                            </div>
+                            <a href="javascript:void(0);" onclick="return DoLogin();" style="background:#038e03;">
                                 <i class="fa fa-sign-in text-lime text-bold"></i>&nbsp;<span class="text-bold" style="color:#fff; font-size:16px;">Đăng Nhập</span>
                             </a>
                         </li>
@@ -1080,6 +1088,11 @@
             $("#no_import_req").text(cim);
             $("#notification_new_export_req").text(cex);
             $("#no_export_req").text(cex);
+        });
+
+        connection.on('updateVipList', (sss) => {
+            //Update ranks
+            GetRanks();
         });
 
 
@@ -1580,6 +1593,41 @@
     </script>
 
     <script>
+        function DoLogin() {
+            var valUser = $('#in_user').val();
+            var valPass = $('#in_pass').val();
+            var LoginData = { Usernameclient: valUser, Passwordclient: valPass };
+            if (LoginData.Usernameclient != "" && LoginData.Passwordclient != "") {
+                $.ajax({
+                    type: "POST",
+                    headers: {
+                        "RequestVerificationToken": tokenKey
+                    },
+                    url: "/Account/LoginJson",
+                    data: LoginData,
+                    dataType: "json",
+                    success: function (data) {
+                        //alert(JSON.stringify(data));
+                        if (data.returnType == "OK") {
+                            //reload
+                            location.reload();
+                        }
+                        else {
+                            alert(data.returnMessage);
+                        }
+                    },
+                    failure: function (data) {
+                        //alert(JSON.stringify(data));
+                    },
+                    error: function (data) {
+                        //alert(JSON.stringify(data));
+                    }
+                });
+            }
+
+            return true;
+        }
+
         function GetPublicIP() {
             //$.ajax({
             //    type: "GET",
@@ -1674,14 +1722,14 @@
             }
 
             setTimeout(function () {
-            ////update Roll_Status Background
-            //if ($('#d2_roll_status').text() == "Đang nhận") {
-            //    $('#d2_roll_status_bg').css("background-color", "#00a400 !important");
-            //}
-            //else {
-            //    $('#d2_roll_status_bg').css("background-color", "#525252 !important");
-            //}
-            GetRanks();
+                ////update Roll_Status Background
+                //if ($('#d2_roll_status').text() == "Đang nhận") {
+                //    $('#d2_roll_status_bg').css("background-color", "#00a400 !important");
+                //}
+                //else {
+                //    $('#d2_roll_status_bg').css("background-color", "#525252 !important");
+                //}
+                GetRanks();
             }, 2000); //2s
         });
 
@@ -1881,6 +1929,11 @@
     @RenderSection("Scripts_AdminLTE_UserExportGold", required: false)
 
     @RenderSection("Scripts_AdminLTE_RollingDetail", required: false)
+
+    @RenderSection("Scripts_AdminLTE_SyncVipAccount", required: false)
+
+    @RenderSection("Scripts_AdminLTE_ResetVipAccount", required: false)
+
 
 
     <!-- Global site tag (gtag.js) - Google Analytics -->

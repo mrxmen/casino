@@ -17,6 +17,8 @@
 </section>
 <!-- Main content -->
 <section class="content">
+    @Html.AntiForgeryToken()
+
     <div class="row">
         <div class="col-lg-4 col-xs-12">
             <div class="box box-danger bg-white">
@@ -41,15 +43,12 @@
                 }
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <form asp-action="ResetVipAccounts" asp-controller="AdminLTE" id="frmResetVip" asp-route-id="123" method="post">
-                        <div class="form-group">
-                            <button type="button" id="btnResetVip24h"
-                                    class="btn btn-lg btn-danger"
-                                    data-toggle="modal" data-target="#modal-reset-XXXXXX">
-                                <i class="glyphicon glyphicon-refresh"></i> Reset Cấp Độ Thành Viên
-                            </button>
-                        </div>
-                    </form>
+                    <button type="button" id="btnResetVip24h"
+                            onclick="return DoReset();"
+                            class="btn btn-lg btn-danger"
+                            style="padding:10px 25px !important; font-size:20px; line-height:36px;">
+                        <i class="glyphicon glyphicon-refresh"></i> Reset Cấp Độ Thành Viên
+                    </button>
 
                     <!-- /.modal -->
                     <div class="modal modal-info fade" id="modal-reset-XXXXXX">
@@ -101,11 +100,11 @@
                         <tbody>
                             @foreach (RoleUsersCollection col in Model.Collections)
                             {
-                            <tr>
-                                <td><img src="@col.RoleAvatar" width="64" /></td>
-                                <td>@col.RoleMemberCount</td>
-                                <td>@col.RoleMemeberList</td>
-                            </tr>
+                                <tr>
+                                    <td><img src="@col.RoleAvatar" width="64" /></td>
+                                    <td>@col.RoleMemberCount</td>
+                                    <td>@col.RoleMemeberList</td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -118,3 +117,41 @@
     </div>
 </section>
 <!-- /.content -->
+
+@section Scripts_AdminLTE_ResetVipAccount {
+    <script>
+        $(function () {
+        });
+
+        function DoReset() {
+
+            if (confirm('Chắc chắn reset luôn?') == false) {
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    "RequestVerificationToken": tokenKey
+                },
+                url: "/AdminLTE/ResetVipAccountsJson",
+                dataType: "json",
+                success: function (data) {
+                    //alert(JSON.stringify(data));
+                    if (data.returnType == "OK") {
+                        connection.invoke('refreshviplist', 0);
+                    }
+                    alert(data.returnMessage);
+                },
+                failure: function (data) {
+                    alert(JSON.stringify(data));
+                },
+                error: function (data) {
+                    alert(JSON.stringify(data));
+                }
+            });
+
+            return true;
+        }
+    </script>
+}

@@ -17,6 +17,8 @@
 </section>
 <!-- Main content -->
 <section class="content">
+    @Html.AntiForgeryToken()
+
     <div class="row">
         <div class="col-lg-4 col-xs-12">
             <div class="box box-danger bg-white">
@@ -40,41 +42,38 @@
                     }
                 }
                 <!-- /.box-header -->
-                <div class="box-body">
-                    <form asp-action="SyncVipAccounts" asp-controller="AdminLTE" id="frmSyncVip" asp-route-id="123" method="post">
-                        <div class="form-group">
-                            <button type="button" id="btnResetVip24h"
-                                    class="btn btn-lg btn-danger"
-                                    data-toggle="modal" data-target="#modal-sync-XXXXXX">
+                        <div class="box-body">
+                            <button type="button" id="btnSyncVip24h"
+                                    onclick="return DoSync();"
+                                    style="padding:10px 25px !important; font-size:20px; line-height:36px;"
+                                    class="btn btn-lg btn-danger">
                                 <i class="glyphicon glyphicon-refresh"></i> Đồng Bộ Cấp Độ VIP
                             </button>
-                        </div>
-                    </form>
 
-                    <!-- /.modal -->
-                    <div class="modal modal-info fade" id="modal-sync-XXXXXX">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <h4 class="modal-title-importgold">Đồng Bộ Cấp Độ VIP</h4>
+                            <!-- /.modal -->
+                            <div class="modal modal-info fade" id="modal-sync-XXXXXX">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <h4 class="modal-title-importgold">Đồng Bộ Cấp Độ VIP</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div id="modal_confirm_title" style="display:block; margin-bottom:5px;">Bạn chắc chắn Đồng bộ?</div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button id="btn_Cancel_Sync" type="button" class="btn btn-outline pull-left" data-dismiss="modal">Bỏ qua</button>
+                                            <button id="btn_frmSyncVip" type="button" class="btn btn-outline" onclick="myFunction(this);">Đồng bộ</button>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
                                 </div>
-                                <div class="modal-body">
-                                    <div id="modal_confirm_title" style="display:block; margin-bottom:5px;">Bạn chắc chắn Đồng bộ?</div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button id="btn_Cancel_Sync" type="button" class="btn btn-outline pull-left" data-dismiss="modal">Bỏ qua</button>
-                                    <button id="btn_frmSyncVip" type="button" class="btn btn-outline" onclick="myFunction(this);">Đồng bộ</button>
-                                </div>
+                                <!-- /.modal-dialog -->
                             </div>
-                            <!-- /.modal-content -->
-                        </div>
-                        <!-- /.modal-dialog -->
-                    </div>
 
-                </div>
+                        </div>
                 <!-- /.box-body -->
             </div>
             <!-- /.box -->
@@ -101,11 +100,11 @@
                         <tbody>
                             @foreach (RoleUsersCollection col in Model.Collections)
                             {
-                            <tr>
-                                <td><img src="@col.RoleAvatar" width="64" /></td>
-                                <td>@col.RoleMemberCount</td>
-                                <td>@col.RoleMemeberList</td>
-                            </tr>
+                                <tr>
+                                    <td><img src="@col.RoleAvatar" width="64" /></td>
+                                    <td>@col.RoleMemberCount</td>
+                                    <td>@col.RoleMemeberList</td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -118,3 +117,42 @@
     </div>
 </section>
 <!-- /.content -->
+
+
+@section Scripts_AdminLTE_SyncVipAccount {
+    <script>
+        $(function () {
+        });
+
+        function DoSync() {
+
+            if (confirm('Chắc chắn đồng bộ luôn?') == false) {
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    "RequestVerificationToken": tokenKey
+                },
+                url: "/AdminLTE/SyncVipAccountsJson",
+                dataType: "json",
+                success: function (data) {
+                    //alert(JSON.stringify(data));
+                    if (data.returnType == "OK") {
+                        connection.invoke('refreshviplist', 1);
+                    }
+                    alert(data.returnMessage);
+                },
+                failure: function (data) {
+                    alert(JSON.stringify(data));
+                },
+                error: function (data) {
+                    alert(JSON.stringify(data));
+                }
+            });
+
+            return true;
+        }
+    </script>
+}
